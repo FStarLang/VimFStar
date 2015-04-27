@@ -323,4 +323,4 @@ endif
 
 let b:current_syntax = "fstar"
 
-" vim: ts=8
+" vim: ts=8 ft=vim
