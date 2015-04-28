@@ -36,7 +36,7 @@ endfunction
 function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     let makeprg = self.makeprgBuild({
                 \ 'exe': 'jdepp',
-                \ 'args_before': '-a',
+                \ 'args_before': '-a "-Dfstar=' . expand($FSTAR_HOME . "/lib") . '"',
                 \ 'post_args_before': '-- fstar' ,
                 \ 'post_args': '--verify'})
     " ERROR: Syntax error near line $LINE, character $COLUMN in file $FILE
