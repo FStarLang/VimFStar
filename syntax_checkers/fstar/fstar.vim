@@ -33,18 +33,25 @@ endfunction
     "return ''
 "endfunction
 
-function! SyntaxCheckers_fstar_fstar_GetLocList() dict
+function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     let makeprg = self.makeprgBuild({
-                \ 'args': '',
-                \ 'args_after': '' })
-    let errorformat = '\ %#%f(%l\\\,%c):\ %m'
+                \ 'exe': 'jdepp',
+                \ 'args_before': '-a',
+                \ 'post_args_before': '-- fstar' ,
+                \ 'post_args': '--verify'})
+    " ERROR: Syntax error near line $LINE, character $COLUMN in file $FILE
+    let errorformat = 'ERROR:\ %m\ near\ line %l\,\ character\ %c\ in\ file\ %f,'
+    " $FILE($LINE,$COLUMN-6,16) : Error
+    " Expected expression of type "bool";
+    " got expression "1" of type "int"
+    let errorformat .= '%E%f(%l%*[^:]:\ Error,%+C%*[^;];,%+Z%m'
     let env = {}
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat, 'env': env })
 endfunction
 
 call g:SyntasticRegistry.CreateAndRegisterChecker({
             \ 'filetype': 'fstar',
-            \ 'name': 'fstar',
+            \ 'name': 'jdepp',
             \ 'exec': 'fstar' })
 
 let &cpo = s:save_cpo
