@@ -27,7 +27,7 @@ syn keyword fstarEffect Tot ML
 syn keyword fstarIf if then else
 syn keyword fstarKind Type Kind S
 syn keyword fstarLambda fun
-syn keyword fstarLemma Lemma ensures requires
+syn keyword fstarLemma Lemma ensures requires decreases
 syn keyword fstarLet let in and
 syn keyword fstarMatch match with function
 syn keyword fstarModule module open
