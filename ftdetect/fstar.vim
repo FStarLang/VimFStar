@@ -8,3 +8,5 @@
 " visit <http://vimdoc.sourceforge.net/htmldoc/uganda.html> for details.
 
 autocmd BufNewFile,BufRead *.fst set filetype=fstar
+
+" vim: set sw=4 sts=4 et ft=vim:
