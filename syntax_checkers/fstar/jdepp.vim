@@ -44,7 +44,9 @@ function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     " $FILE($LINE,$COLUMN-6,16) : Error
     " Expected expression of type "bool";
     " got expression "1" of type "int"
-    let errorformat .= '%E%f(%l%*[^:]:\ Error,%+C%*[^;];,%+Z%m'
+    let errorformat .= '%E%f(%l%*[^:]:\ Error,%+C%*[^;];,%+Z%m,'
+    " $FILE($LINE0,$COL0-$LINE1,$COL1): Subtyping check failed...
+    let errorformat .= '%f(%l%*[^:]:%m'
     let env = {}
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat, 'env': env })
 endfunction
