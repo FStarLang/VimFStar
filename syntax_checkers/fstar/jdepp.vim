@@ -37,16 +37,17 @@ function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     let makeprg = self.makeprgBuild({
                 \ 'exe': 'jdepp',
                 \ 'args_before': '-a "-Dfstar=' . expand($FSTAR_HOME . "/lib") . '"',
-                \ 'post_args_before': '-- ' . expand($FSTAR_HOME . '/bin/fstar.exe'),
-                \ 'post_args': '--verify'})
+                \ 'post_args_before': '-- ' . expand($FSTAR_HOME . '/bin/fstar.exe')})
     " ERROR: Syntax error near line $LINE, character $COLUMN in file $FILE
     let errorformat = 'ERROR:\ %m\ near\ line %l\,\ character\ %c\ in\ file\ %f,'
     " $FILE($LINE,$COLUMN-6,16) : Error
     " Expected expression of type "bool";
     " got expression "1" of type "int"
-    let errorformat .= '%E%f(%l%*[^:]:\ Error,%+C%*[^;];,%+Z%m,'
+    let errorformat .= '%E%f(%l%*[^:]:\ Error,'
     " $FILE($LINE0,$COL0-$LINE1,$COL1): Subtyping check failed...
-    let errorformat .= '%f(%l%*[^:]:%m'
+    let errorformat .= '%f(%l%*[^:]:%m,'
+    " add unrecognized lines to the preceeding error.
+    let errorformat .= '%+C%m'
     let env = {}
     return SyntasticMake({ 'makeprg': makeprg, 'errorformat': errorformat, 'env': env })
 endfunction
