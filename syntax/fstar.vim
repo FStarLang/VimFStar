@@ -17,76 +17,117 @@ endif
 " F* is case sensitive.
 syn case match
 
-syn keyword fstarAnnotation type val
-syn keyword fstarAssertion assert assume
-syn keyword fstarBoolTypes True False
-syn keyword fstarBoolValues true false
-syn keyword fstarBuiltin Some None
-syn keyword fstarBuiltin nat int list bool unit string
-syn keyword fstarEffect Tot ML
-syn keyword fstarIf if then else
-syn keyword fstarKind Type Kind S
-syn keyword fstarLambda fun
-syn keyword fstarLemma Lemma ensures requires decreases
-syn keyword fstarLet let in and
-syn keyword fstarMatch match with function
-syn keyword fstarModule module open
-syn keyword fstarQuantifier forall exists
-syn keyword fstarValueOperator not and or
-syn match fstarDelimiter ","
-syn match fstarDelimiter "->"
-syn match fstarDelimiter ":"
-syn match fstarDelimiter ";"
-syn match fstarDelimiter "\."
-syn match fstarFloat "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
-syn match fstarNumber "\<-\=0[b|B]\([01]\|_\)\+[l|L|n]\?\>"
-syn match fstarNumber "\<-\=0[o|O]\(\o\|_\)\+[l|L|n]\?\>"
-syn match fstarNumber "\<-\=0[x|X]\(\x\|_\)\+[l|L|n]\?\>"
-syn match fstarNumber "\<-\=\d\(_\|\d\)*[l|L|n]\?\>"
-syn match fstarPascalCase /\<\u\w*\>/
-syn match fstarTypeOperator "/\\" " /\
-syn match fstarTypeOperator "\\/" " \/
-syn match fstarTypeVariable /\<\('\|#\)\(\l\|_\)\w*\>/
-syn match fstarVariable /\<\('\|#\)\@!\(\l\|_\)\(\w\|'\)*\>/
-syn region fstarLineComment start="//" end="$" keepend contains=@Spell
-syn region fstarRegionComment start="(\*" end="\*)" contains=@Spell fold extend
-syn region fstarString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
+" This seems to be a common trope.
+syn keyword fstarTodo contained TODO FIXME XXX NOTE
 
-hi def link fstarAnnotation Keyword
-hi def link fstarAssertion Keyword
-hi def link fstarBoolTypes Type
-hi def link fstarBoolValues Boolean
-hi def link fstarBuiltin Type
-hi def link fstarDelimiter Delimiter
-hi def link fstarEffect Type
-hi def link fstarFloat Float
-hi def link fstarIf Conditional
-hi def link fstarKind Type
-hi def link fstarLambda Keyword
-hi def link fstarLemma Keyword
-hi def link fstarLet Keyword
+" Comments
+syn region fstarLineComment start="//"hs=e+1  end="$" keepend contains=@Spell
+syn region fstarRegionComment start="(\*"hs=e+1 end="\*)"he=s-1 contains=@Spell,fstarRegionComment,fstarTodo fold extend
 hi def link fstarLineComment Comment
-hi def link fstarMatch Conditional
-hi def link fstarModule PreProc
-hi def link fstarNumber Number
-hi def link fstarPascalCase Include
-hi def link fstarQuantifier Repeat
 hi def link fstarRegionComment Comment
-hi def link fstarString String
-hi def link fstarTypeVariable Statement
-hi def link fstarVariable Identifier
+
+" keywords
+syn keyword fstarAnnotation type val
+hi def link fstarAnnotation Keyword
+syn keyword fstarAssertion assert assume
+hi def link fstarAssertion Debug
+syn keyword fstarLambda fun
+hi def link fstarLambda Keyword
+syn keyword fstarLemma Lemma ensures requires decreases
+hi def link fstarLemma Macro
+syn keyword fstarLet let in and
+hi def link fstarLet Keyword
+syn keyword fstarQuantifier forall exists
+hi def link fstarQuantifier Debug
+
+" builtin types and kinds
+syn keyword fstarKinds Type S
+hi def link fstarKinds Define
+syn keyword fstarTypes nat int 
+syn keyword fstarTypes list string
+syn keyword fstarTypes bool unit 
+syn keyword fstarTypes True False
+hi def link fstarTypes Type
+syn keyword fstarEffects Tot ML
+hi def link fstarEffects Type
+syn keyword fstarBoolValues true false
+hi def link fstarBoolValues Constant
+
+" conditional statements
+syn keyword fstarIf if then else
+hi def link fstarKind Conditional
+syn keyword fstarMatch match with
+syn keyword fstarMatch function
+hi def link fstarMatch Conditional
+
+" modules
+syn keyword fstarModule module open
+hi def link fstarModule Include
+
+" general identifiers.
+" note: this pattern cannot end with a \> because it matches that before it
+" will match a ', cutting the highlighting off early.
+" todo: i'd like to be able to differentiate a pattern from a normal
+" expression.
+syn match fstarIdentifier "\<\l[a-zA-Z0-9_']*"
+hi def link fstarIdentifier Identifier
+
+" todo: i'd like to differentiate this from module names.
+syn match fstarConstructor "\<\u[a-zA-Z0-9_']*"
+hi def link fstarConstructor Function
+
+" Highlighting
+
+"syn keyword fstarValueOperator not and or
+"syn match fstarDelimiter ","
+"syn match fstarDelimiter "->"
+"syn match fstarDelimiter ":"
+"syn match fstarDelimiter ";"
+"syn match fstarDelimiter "\."
+"syn match fstarFloat "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
+"syn match fstarNumber "\<-\=0[b|B]\([01]\|_\)\+[l|L|n]\?\>"
+"syn match fstarNumber "\<-\=0[o|O]\(\o\|_\)\+[l|L|n]\?\>"
+"syn match fstarNumber "\<-\=0[x|X]\(\x\|_\)\+[l|L|n]\?\>"
+"syn match fstarNumber "\<-\=\d\(_\|\d\)*[l|L|n]\?\>"
+"syn match fstarPascalCase /\<\u\w*\>/
+"syn match fstarTypeOperator "/\\" " /\
+"syn match fstarTypeOperator "\\/" " \/
+"syn match fstarTypeVariable /\<\('\|#\)\(\l\|_\)\w*\>/
+"syn region fstarString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
+
+"hi def link fstarAnnotation Keyword
+"hi def link fstarAssertion Keyword
+"hi def link fstarBoolTypes Type
+"hi def link fstarBoolValues Boolean
+"hi def link fstarBuiltin Type
+"hi def link fstarDelimiter Delimiter
+"hi def link fstarEffect Type
+"hi def link fstarFloat Float
+"hi def link fstarIf Conditional
+"hi def link fstarKind Type
+"hi def link fstarLambda Keyword
+"hi def link fstarLemma Keyword
+"hi def link fstarLet Keyword
+"hi def link fstarMatch Conditional
+"hi def link fstarModule PreProc
+"hi def link fstarNumber Number
+"hi def link fstarPascalCase Include
+"hi def link fstarQuantifier Repeat
+"hi def link fstarRegionComment Comment
+"hi def link fstarString String
+"hi def link fstarTypeVariable Statement
 
 "syn match fstarTypeOperator "<==>"
-syn match fstarTypeOperator "=="
+"syn match fstarTypeOperator "=="
 "syn match fstarTypeOperator "==>"
 "syn match fstarValueOperator "<"
 "syn match fstarValueOperator "<="
-syn match fstarValueOperator "="
+"syn match fstarValueOperator "="
 "syn match fstarValueOperator ">"
 "syn match fstarValueOperator ">="
 
-hi def link fstarTypeOperator Function
-hi def link fstarValueOperator Type
+"hi def link fstarTypeOperator Function
+"hi def link fstarValueOperator Type
 
 let b:current_syntax = "fstar"
 
