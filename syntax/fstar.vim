@@ -38,7 +38,7 @@ hi def link fstarLemma Macro
 syn keyword fstarLet let in and
 hi def link fstarLet Keyword
 syn keyword fstarQuantifier forall exists
-hi def link fstarQuantifier Debug
+hi def link fstarQuantifier Repeat
 
 " builtin types and kinds
 syn keyword fstarKinds Type S
@@ -46,12 +46,11 @@ hi def link fstarKinds Define
 syn keyword fstarTypes nat int 
 syn keyword fstarTypes list string
 syn keyword fstarTypes bool unit 
-syn keyword fstarTypes True False
-hi def link fstarTypes Type
+hi def link fstarTypes Boolean
 syn keyword fstarEffects Tot ML
 hi def link fstarEffects Type
-syn keyword fstarBoolValues true false
-hi def link fstarBoolValues Constant
+syn keyword fstarBoolean true false True False
+hi def link fstarBoolean Boolean
 
 " conditional statements
 syn keyword fstarIf if then else
@@ -69,54 +68,46 @@ hi def link fstarModule Include
 " will match a ', cutting the highlighting off early.
 " todo: i'd like to be able to differentiate a pattern from a normal
 " expression.
-syn match fstarIdentifier "\<\l[a-zA-Z0-9_']*"
+syn match fstarIdentifier "\<[a-zA-Z_][a-zA-Z0-9_']*"
 hi def link fstarIdentifier Identifier
 
 " todo: i'd like to differentiate this from module names.
 syn match fstarConstructor "\<\u[a-zA-Z0-9_']*"
 hi def link fstarConstructor Function
 
-" Highlighting
+syn match fstarTypeVariable "'\l[a-zA-Z0-9_]*"
+hi def link fstarTypeVariable Type
 
-"syn keyword fstarValueOperator not and or
+" operators
+syn keyword fstarValueOperator not and or
+hi def link fstarValueOperator Operator
+syn match fstarWildcard "\<_\>"
+hi def link fstarWildcard Operator
+
+" literals
+syn match fstarNumber "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
+syn match fstarNumber "\<-\=0[b|B]\([01]\|_\)\+[l|L|n]\?\>"
+syn match fstarNumber "\<-\=0[o|O]\(\o\|_\)\+[l|L|n]\?\>"
+syn match fstarNumber "\<-\=0[x|X]\(\x\|_\)\+[l|L|n]\?\>"
+syn match fstarNumber "\<-\=\d\(_\|\d\)*[l|L|n]\?\>"
+hi def link fstarNumber Number
+" todo: the hs & he suffixes don't appear to be working here.
+syn region fstarString start=+"+hs=e skip=+\\\\\|\\"+ end=+"+he=s contains=@Spell
+hi def link fstarString String
+
+"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="(" matchgroup=ocamlKeyword end=")" contains=ALLBUT,@ocamlContained,ocamlParenErr
+"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="{" matchgroup=ocamlKeyword end="}"  contains=ALLBUT,@ocamlContained,ocamlBraceErr
+"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="\[" matchgroup=ocamlKeyword end="\]" contains=ALLBUT,@ocamlContained,ocamlBrackErr
+"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="\[|" matchgroup=ocamlKeyword end="|\]" contains=ALLBUT,@ocamlContained,ocamlArrErr
+
 "syn match fstarDelimiter ","
 "syn match fstarDelimiter "->"
 "syn match fstarDelimiter ":"
 "syn match fstarDelimiter ";"
 "syn match fstarDelimiter "\."
-"syn match fstarFloat "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
-"syn match fstarNumber "\<-\=0[b|B]\([01]\|_\)\+[l|L|n]\?\>"
-"syn match fstarNumber "\<-\=0[o|O]\(\o\|_\)\+[l|L|n]\?\>"
-"syn match fstarNumber "\<-\=0[x|X]\(\x\|_\)\+[l|L|n]\?\>"
-"syn match fstarNumber "\<-\=\d\(_\|\d\)*[l|L|n]\?\>"
 "syn match fstarPascalCase /\<\u\w*\>/
 "syn match fstarTypeOperator "/\\" " /\
 "syn match fstarTypeOperator "\\/" " \/
-"syn match fstarTypeVariable /\<\('\|#\)\(\l\|_\)\w*\>/
-"syn region fstarString start=+"+ skip=+\\\\\|\\"+ end=+"+ contains=@Spell
-
-"hi def link fstarAnnotation Keyword
-"hi def link fstarAssertion Keyword
-"hi def link fstarBoolTypes Type
-"hi def link fstarBoolValues Boolean
-"hi def link fstarBuiltin Type
-"hi def link fstarDelimiter Delimiter
-"hi def link fstarEffect Type
-"hi def link fstarFloat Float
-"hi def link fstarIf Conditional
-"hi def link fstarKind Type
-"hi def link fstarLambda Keyword
-"hi def link fstarLemma Keyword
-"hi def link fstarLet Keyword
-"hi def link fstarMatch Conditional
-"hi def link fstarModule PreProc
-"hi def link fstarNumber Number
-"hi def link fstarPascalCase Include
-"hi def link fstarQuantifier Repeat
-"hi def link fstarRegionComment Comment
-"hi def link fstarString String
-"hi def link fstarTypeVariable Statement
-
 "syn match fstarTypeOperator "<==>"
 "syn match fstarTypeOperator "=="
 "syn match fstarTypeOperator "==>"
@@ -125,9 +116,6 @@ hi def link fstarConstructor Function
 "syn match fstarValueOperator "="
 "syn match fstarValueOperator ">"
 "syn match fstarValueOperator ">="
-
-"hi def link fstarTypeOperator Function
-"hi def link fstarValueOperator Type
 
 let b:current_syntax = "fstar"
 
