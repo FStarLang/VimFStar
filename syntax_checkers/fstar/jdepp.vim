@@ -43,9 +43,9 @@ function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     " $FILE($LINE,$COLUMN-6,16) : Error
     " Expected expression of type "bool";
     " got expression "1" of type "int"
-    let errorformat .= '%E%f(%l%*[^:]:\ Error,'
+    let errorformat .= '%E%f(%l\,%c%*[^:]:\ Error,'
     " $FILE($LINE0,$COL0-$LINE1,$COL1): Subtyping check failed...
-    let errorformat .= '%f(%l%*[^:]:%m,'
+    let errorformat .= '%f(%l\,%c%*[^:]:%m,'
     " add unrecognized lines to the preceeding error.
     let errorformat .= '%+C%m'
     let env = {}
