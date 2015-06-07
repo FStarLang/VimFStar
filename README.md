@@ -1,11 +1,12 @@
-# VimFStar
+# VimFStar Interactive
 
-*VimFStar* is a [Vim] plugin for [F*], an [ML]-like language with a type system for program verification.
+*VimFStar Interactive* is a [Vim] plugin for [F*], an [ML]-like language with a type system for program verification.
 
 ## Features
 
 - `.fst` file detection.
 - Syntax highlighting (based on [Vim's OCaml syntax file]).
+- Interactive verification of code
 
 ## Installation
 
@@ -25,6 +26,16 @@ If you're using [vim-plug], for example, perform the following steps to install 
 
 2. Restart Vim
 3. `:PlugInstall` to install the plugin.
+
+## Use of the interactive verification
+
+This fork was basically to give access to interactive verification.
+
+To test your code and it to the environment up to the current position of the cursor, press ```vim <F2>``` in normal mode
+
+If you want to test some part of your code without adding it to the environment, select it in visual mode and press ```vim <C-i>```
+
+If you want to get the result of what you launched, press ```vim <F3>``` in normal mode
 
 ## License
 
