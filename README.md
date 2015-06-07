@@ -31,11 +31,11 @@ If you're using [vim-plug], for example, perform the following steps to install 
 
 This fork was basically to give access to interactive verification.
 
-To test your code and it to the environment up to the current position of the cursor, press ```vim <F2>``` in normal mode
+To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode
 
-If you want to test some part of your code without adding it to the environment, select it in visual mode and press ```vim <C-i>```
+If you want to test some part of your code without adding it to the environment, select it in visual mode and press ```<C-i>```
 
-If you want to get the result of what you launched, press ```vim <F3>``` in normal mode
+If you want to get the result of what you launched, press ```<F3>``` in normal mode
 
 ## License
 
@@ -45,6 +45,8 @@ If you want to get the result of what you launched, press ```vim <F3>``` in norm
 
 - more accurate syntax highlighting.
 - [syntastic] integration.
+- better highlighting of verified code
+- quick access to error locations
 
 [ML]:http://en.wikipedia.org/wiki/ML_(programming_language)
 [Vim]: http://www.vim.org
