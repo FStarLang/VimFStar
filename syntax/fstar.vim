@@ -32,7 +32,7 @@ hi def link fstarAnnotation Keyword
 syn keyword fstarAssertion assert assume
 hi def link fstarAssertion Debug
 syn keyword fstarLambda fun
-hi def link fstarLambda Keyword
+hi def link fstarLambda Label
 syn keyword fstarLemma Lemma ensures requires decreases
 hi def link fstarLemma Macro
 syn keyword fstarLet let in and
@@ -105,17 +105,12 @@ hi def link fstarString String
 "syn match fstarDelimiter ":"
 "syn match fstarDelimiter ";"
 "syn match fstarDelimiter "\."
-"syn match fstarPascalCase /\<\u\w*\>/
-"syn match fstarTypeOperator "/\\" " /\
-"syn match fstarTypeOperator "\\/" " \/
-"syn match fstarTypeOperator "<==>"
-"syn match fstarTypeOperator "=="
-"syn match fstarTypeOperator "==>"
-"syn match fstarValueOperator "<"
-"syn match fstarValueOperator "<="
-"syn match fstarValueOperator "="
-"syn match fstarValueOperator ">"
-"syn match fstarValueOperator ">="
+
+syn match fstarTypeOperator "/\\\|\\/\|<==>\|==>\|==\|->"
+hi def link fstarTypeOperator Operator
+
+syn match fstarValueOperator "[<>=*/+-]"
+hi def link fstarValueOperator Operator
 
 let b:current_syntax = "fstar"
 
