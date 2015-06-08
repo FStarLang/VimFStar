@@ -39,6 +39,14 @@ If you want to test some part of your code without adding it to the environment,
 
 If you want to get the result of the test you launched, press ```<F3>``` in normal mode
 
+If you want to use library files and/or set options, use ```build-config``` in your file. Example : if my file is at ```$FSTAR_HOME/examples/metatheory``` and I want to use ```classical.fst``` and ```ext.fst``` in ```$FSTAR_HOME/lib``` and set some options, I will put the following code at the top of my file :
+```fstar
+(*--build-config
+    options:--z3timeout 20 --max_fuel 8 --max_ifuel 6 --initial_fuel 4 --initial_ifuel 2;
+    other-files:../../lib/classical.fst ../../lib/ext.fst
+  --*)
+```
+
 ## License
 
 *VimFStar* is distributed under the same license as Vim itself. See [LICENSE] for more details.
