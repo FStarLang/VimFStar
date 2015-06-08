@@ -48,7 +48,6 @@ def fstar_get_config_from_buf() :
     response=[]
     for line in configlines :
         line = line.strip(' \t\n\r')
-        print line
         temp = line.split(':')
         if(temp[0] == 'options'):
             response = response + (temp[1].split(' '))
