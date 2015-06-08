@@ -39,6 +39,9 @@ If you want to test some part of your code without adding it to the environment,
 
 If you want to get the result of the test you launched, press ```<F3>``` in normal mode
 
+You can reset the interaction with the command ```:call Freset()``` in case something went wrong or if
+you want to change a checked part.
+
 If you want to use library files and/or set options, use ```build-config``` in your file. Example : if my file is at ```$FSTAR_HOME/examples/metatheory``` and I want to use ```classical.fst``` and ```ext.fst``` in ```$FSTAR_HOME/lib``` and set some options, I will put the following code at the top of my file :
 ```fstar
 (*--build-config
@@ -46,6 +49,7 @@ If you want to use library files and/or set options, use ```build-config``` in y
     other-files:../../lib/classical.fst ../../lib/ext.fst
   --*)
 ```
+This configuration is read when the buffer is loaded or when the plugin is reseted. So do not forget to reset the plugin if you change build-config.
 
 ## License
 
