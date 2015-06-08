@@ -24,10 +24,14 @@ fu! Fget_result()
   py fstar_vim_query_answer()
 endfunction
 
+fu! Freset()
+  py fstar_reset()
+endfunction
+
 highlight FChecked ctermbg=darkgreen
 
 py fstar_init()
-vnoremap <C-i> :<C-u>call Ftest_code()<CR>
-nnoremap <F2> :call Funtil_cursor()<CR>
-nnoremap <F3> :call Fget_result()<CR>
+vnoremap <buffer> <C-i> :<C-u>call Ftest_code()<CR>
+nnoremap <buffer> <F2> :call Funtil_cursor()<CR>
+nnoremap <buffer> <F3> :call Fget_result()<CR>
 "<C-u> is to remove '<,'> which execute the command for each selected line

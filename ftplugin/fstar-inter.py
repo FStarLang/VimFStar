@@ -11,12 +11,28 @@ fstarpotentialline=0
 fstarrequestline=0
 fstaranswer=None
 fstarupdatehi=False
+fstarmatch=None
+fst=None
+interout=None
+
 ON_POSIX = 'posix' in sys.builtin_module_names
 
+def fstar_reset_hi() :
+    global fstarmatch
+    if fstarmatch != None:
+        vim.command("call matchdelete("+str(fstarmatch)+")")
+    fstarmatch=None
+    return
+
+def fstar_add_hi(pos) :
+    global fstarmatch
+    if pos >= 1 :
+        fstarmatch=int(vim.eval("matchadd('FChecked','\\%<"+str(pos+1)+"l')"))
+    return
+
 def fstar_update_hi(newpos) :
-    vim.command("syntax clear FChecked")
-    if newpos >= 1 :
-        vim.command("syntax region FChecked start='\\%1l' end='\\%" + str(newpos+1) + "l'")
+    fstar_reset_hi()
+    fstar_add_hi(newpos)
     return
 
 #no waiting read as in http://stackoverflow.com/a/4896288/2598986
@@ -65,6 +81,18 @@ def fstar_init () :
     t.daemon=True
     t.start()
 
+def fstar_reset() :
+    global fstaridle,fstarcurrentline,fstarpotentialline,fstaranswer,fstarupdatehi,fstarmatch
+    fstaridle=0
+    fstarcurrentline=0
+    fstarpotentialline=0
+    fstaranswer=None
+    fstarupdatehi=False
+    fstar_reset_hi()
+    fstar_init()
+    print 'Interaction reseted'
+
+
 def fstar_test_code (code,keep) :
     global fstaridle,fst
     if fstaridle == 1 :
@@ -102,7 +130,7 @@ def fstar_gather_answer () :
             return fstaranswer
         fstaranswer=fstar_convert_answer(line)
         line=fstar_readinter()
-    return None
+    return 'Idle'
 
 def fstar_vim_query_answer () :
     r = fstar_gather_answer()
