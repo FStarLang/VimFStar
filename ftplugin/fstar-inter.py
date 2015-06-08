@@ -5,7 +5,7 @@ from subprocess import PIPE,Popen
 from threading import Thread
 from Queue import Queue, Empty
 fstarpath='fstar.exe'
-fstaridle=0
+fstarbusy=0
 fstarcurrentline=0
 fstarpotentialline=0
 fstarrequestline=0
@@ -82,8 +82,8 @@ def fstar_init () :
     t.start()
 
 def fstar_reset() :
-    global fstaridle,fstarcurrentline,fstarpotentialline,fstaranswer,fstarupdatehi,fstarmatch
-    fstaridle=0
+    global fstarbusy,fstarcurrentline,fstarpotentialline,fstaranswer,fstarupdatehi,fstarmatch
+    fstarbusy=0
     fstarcurrentline=0
     fstarpotentialline=0
     fstaranswer=None
@@ -94,10 +94,10 @@ def fstar_reset() :
 
 
 def fstar_test_code (code,keep) :
-    global fstaridle,fst
-    if fstaridle == 1 :
-        return 'Already idle'
-    fstaridle = 1
+    global fstarbusy,fst
+    if fstarbusy == 1 :
+        return 'Already busy'
+    fstarbusy = 1
     fstar_writeinter('#push\n')
     fstar_writeinter(code) 
     fstar_writeinter('#end\n')
@@ -113,24 +113,24 @@ def fstar_convert_answer(ans) :
     return '(%d,%s-%d,%s) : %s' % (int(res.group(1))+fstarrequestline-1,res.group(2),int(res.group(3))+fstarrequestline-1,res.group(4),res.group(5))
 
 def fstar_gather_answer () :
-    global fstaridle,fst,fstaranswer,fstarpotentialline,fstarcurrentline,fstarupdatehi
-    if fstaridle == 0 :
+    global fstarbusy,fst,fstaranswer,fstarpotentialline,fstarcurrentline,fstarupdatehi
+    if fstarbusy == 0 :
         return 'No verification pending'
     line=fstar_readinter()
     while line != None :
         if line=='ok\n' :
-            fstaridle=0
+            fstarbusy=0
             fstarcurrentline=fstarpotentialline
             if fstarupdatehi :
                 fstar_update_hi(fstarcurrentline)
             return 'Verification succeeded'
         if line=='fail\n' :
-            fstaridle=0
+            fstarbusy=0
             fstarpotentialline=fstarcurrentline
             return fstaranswer
         fstaranswer=fstar_convert_answer(line)
         line=fstar_readinter()
-    return 'Idle'
+    return 'Busy'
 
 def fstar_vim_query_answer () :
     r = fstar_gather_answer()
@@ -156,8 +156,8 @@ def fstar_get_selection () :
 def fstar_vim_test_code () :
     global fstarrequestline
     global fstarupdatehi
-    if fstaridle == 1 :
-        print 'Already idle'
+    if fstarbusy == 1 :
+        print 'Already busy'
         return
     fstarrequestline = int(vim.eval("getpos(\"'<\")")[1])
     code = fstar_get_selection()
@@ -166,8 +166,8 @@ def fstar_vim_test_code () :
 
 def fstar_vim_until_cursor () :
     global fstarcurrentline,fstarpotentialline,fstarrequestline,fstarupdatehi
-    if fstaridle == 1 :
-        print 'Already idle'
+    if fstarbusy == 1 :
+        print 'Already busy'
         return
     vimline = int(vim.eval("getpos(\".\")")[1])
     if vimline <= fstarcurrentline :
