@@ -35,7 +35,7 @@ First, put ```fstar.exe``` in your path.
 
 To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode
 
-If you want to test some part of your code without adding it to the environment, select it in visual mode and press ```<C-i>```
+If you want to test some part of your code without adding it to the environment, select it in visual mode and press ```<F2>```
 
 If you want to get the result of the test you launched, press ```<F3>``` in normal mode
 
