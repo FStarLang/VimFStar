@@ -35,6 +35,10 @@ def fstar_update_hi(newpos) :
     fstar_add_hi(newpos)
     return
 
+def fstar_update_marker(newpos) : 
+    vim.command('exe "normal ' + str(newpos) + 'G1|mv\\<C-o>"')
+    return
+
 #no waiting read as in http://stackoverflow.com/a/4896288/2598986
 def fstar_enqueue_output(out, queue):
     for line in iter(out.readline, b''):
@@ -123,12 +127,13 @@ def fstar_gather_answer () :
             fstarcurrentline=fstarpotentialline
             if fstarupdatehi :
                 fstar_update_hi(fstarcurrentline)
+                fstar_update_marker(fstarcurrentline+1)
             return 'Verification succeeded'
         if line=='fail\n' :
             fstarbusy=0
             fstarpotentialline=fstarcurrentline
             return fstaranswer
-        fstaranswer=fstar_convert_answer(line)
+        fstaranswer+='\n'+fstar_convert_answer(line)
         line=fstar_readinter()
     return 'Busy'
 
@@ -154,21 +159,23 @@ def fstar_get_selection () :
 
 
 def fstar_vim_test_code () :
-    global fstarrequestline
+    global fstarrequestline, fstaranswer
     global fstarupdatehi
     if fstarbusy == 1 :
         print 'Already busy'
         return
+    fstaranswer=''
     fstarrequestline = int(vim.eval("getpos(\"'<\")")[1])
     code = fstar_get_selection()
     fstarupdatehi=False
     fstar_test_code(code,False)
 
 def fstar_vim_until_cursor () :
-    global fstarcurrentline,fstarpotentialline,fstarrequestline,fstarupdatehi
+    global fstarcurrentline,fstarpotentialline,fstarrequestline,fstarupdatehi, fstaranswer
     if fstarbusy == 1 :
         print 'Already busy'
         return
+    fstaranswer = ''
     vimline = int(vim.eval("getpos(\".\")")[1])
     if vimline <= fstarcurrentline :
         print 'Already checked'
@@ -181,6 +188,10 @@ def fstar_vim_until_cursor () :
     fstarupdatehi=True
     fstar_test_code(code,True)
     print 'Test until this point launched'
+
+def fstar_vim_get_answer() :
+    global fstaranswer
+    print fstaranswer
 
 def fstar_get_current_line () :
     global fstarcurrentline
