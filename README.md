@@ -29,8 +29,6 @@ If you're using [vim-plug], for example, perform the following steps to install 
 
 ## Use of the interactive verification
 
-This fork was basically to give access to interactive verification.
-
 First, put ```fstar.exe``` in your $PATH. VimFStar will check that ```fstar.exe``` is present before loading interactive functions.
 
 To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode. The marker ```v``` is set to the line just after the end of the checked part, so you can go there with ```'v```
@@ -46,14 +44,16 @@ If you are working on a big chunk of code, and it has no empty new line inside, 
 You can reset the interaction with the command ```:Freset``` in case something went wrong or if
 you want to change a checked part.
 
-If you want to use library files and/or set options, use ```build-config``` in your file. Example : if my file is at ```$FSTAR_HOME/examples/metatheory``` and I want to use ```classical.fst``` and ```ext.fst``` in ```$FSTAR_HOME/lib``` and set some options, I will put the following code at the top of my file :
+If you want to use library files and/or set options, use ```build-config``` in your file. For example, if my file is at ```$FSTAR_HOME/examples/metatheory``` and I want to use ```classical.fst``` and ```ext.fst``` in ```$FSTAR_HOME/lib``` and set some options, I will put the following code at the top of my file:
+
 ```fstar
 (*--build-config
     options:--z3timeout 20 --max_fuel 8 --max_ifuel 6 --initial_fuel 4 --initial_ifuel 2;
     other-files:../../lib/classical.fst ../../lib/ext.fst
   --*)
 ```
-This configuration is read when the buffer is loaded or when the plugin is reseted. So do not forget to reset the plugin if you change build-config.
+
+This configuration is read when the buffer is loaded or when the plugin is reset. So do not forget to reset the plugin if you change `build-config`.
 
 ## License
 
