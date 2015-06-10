@@ -19,7 +19,7 @@ If you're using [vim-plug], for example, perform the following steps to install 
 	```vim
 	call plug#begin()
 	" ...
-	Plug 'SimonForest/VimFStar' {'for': 'fstar'}
+	Plug 'FStarLang/VimFStar' {'for': 'fstar'}
 	" ...
 	call plug#end()
 	```
@@ -31,7 +31,7 @@ If you're using [vim-plug], for example, perform the following steps to install 
 
 This fork was basically to give access to interactive verification.
 
-First, put ```fstar.exe``` in your path.
+First, put ```fstar.exe``` in your $PATH. VimFStar will check that ```fstar.exe``` is present before loading interactive functions.
 
 To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode. The marker ```v``` is set to the line just after the end of the checked part, so you can go there with ```'v```
 
