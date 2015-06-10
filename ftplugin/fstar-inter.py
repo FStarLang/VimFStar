@@ -36,7 +36,7 @@ def fstar_update_hi(newpos) :
     return
 
 def fstar_update_marker(newpos) : 
-    vim.command('exe "normal ' + str(newpos) + 'G1|mv\\<C-o>"')
+    vim.command('exe "normal! ' + str(newpos) + 'G1|mv\\<C-o>"')
     return
 
 #no waiting read as in http://stackoverflow.com/a/4896288/2598986
@@ -169,6 +169,7 @@ def fstar_vim_test_code () :
     code = fstar_get_selection()
     fstarupdatehi=False
     fstar_test_code(code,False)
+    print 'Test of selected code launched'
 
 def fstar_vim_until_cursor () :
     global fstarcurrentline,fstarpotentialline,fstarrequestline,fstarupdatehi, fstaranswer
