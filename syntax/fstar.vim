@@ -20,12 +20,6 @@ syn case match
 " This seems to be a common trope.
 syn keyword fstarTodo contained TODO FIXME XXX NOTE
 
-" Comments
-syn region fstarLineComment start="//"hs=e+1  end="$" keepend contains=@Spell
-syn region fstarRegionComment start="(\*"hs=e+1 end="\*)"he=s-1 contains=@Spell,fstarRegionComment,fstarTodo fold extend
-hi def link fstarLineComment Comment
-hi def link fstarRegionComment Comment
-
 " keywords
 syn keyword fstarAnnotation type val
 hi def link fstarAnnotation Keyword
@@ -62,6 +56,8 @@ hi def link fstarMatch Conditional
 " modules
 syn keyword fstarModule module open
 hi def link fstarModule Include
+
+" note: lower priority matches & regions should be listed first.
 
 " general identifiers.
 " note: this pattern cannot end with a \> because it matches that before it
@@ -106,11 +102,26 @@ hi def link fstarString String
 "syn match fstarDelimiter ";"
 "syn match fstarDelimiter "\."
 
-syn match fstarTypeOperator "/\\\|\\/\|<==>\|==>\|==\|->"
+syn match fstarValueOperator "<"
+syn match fstarValueOperator ">"
+syn match fstarValueOperator "="
+syn match fstarValueOperator "*"
+syn match fstarValueOperator "/"
+syn match fstarValueOperator "+"
+syn match fstarValueOperator "-"
+syn match fstarTypeOperator "/\\"
+syn match fstarTypeOperator "\\/"
+syn match fstarTypeOperator "=="
+syn match fstarTypeOperator "==>"
+syn match fstarTypeOperator "<==>"
+hi def link fstarValueOperator Operator
 hi def link fstarTypeOperator Operator
 
-syn match fstarValueOperator "[<>=*/+-]"
-hi def link fstarValueOperator Operator
+" Comments
+syn region fstarLineComment start="//"hs=e+1  end="$" keepend contains=@Spell
+syn region fstarRegionComment start="(\*"hs=e+1 end="\*)"he=s-1 contains=@Spell,fstarRegionComment,fstarTodo fold extend
+hi def link fstarLineComment Comment
+hi def link fstarRegionComment Comment
 
 let b:current_syntax = "fstar"
 
