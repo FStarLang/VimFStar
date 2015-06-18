@@ -78,6 +78,9 @@ hi def link fstarConstructor Identifier
 syn match fstarTypeVariable "'\l[a-zA-Z0-9_]*"
 hi def link fstarTypeVariable Identifier
 
+syn match fstarInferPrefix "#"
+hi def link fstarInferPrefix StorageClass
+
 syn match fstarWildcard "\<_\>"
 hi def link fstarWildcard Identifier
 
