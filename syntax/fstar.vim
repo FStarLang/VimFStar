@@ -18,37 +18,41 @@ endif
 syn case match
 
 " This seems to be a common trope.
-syn keyword fstarTodo contained TODO FIXME XXX NOTE
+syn keyword fstarTodo contained TODO todo FIXME XXX NOTE
+hi def link fstarTodo Todo
 
 " keywords
 syn keyword fstarAnnotation type val
 hi def link fstarAnnotation Keyword
 syn keyword fstarAssertion assert assume
-hi def link fstarAssertion Debug
+hi def link fstarAssertion Keyword
 syn keyword fstarLambda fun
-hi def link fstarLambda Label
+hi def link fstarLambda Keyword
 syn keyword fstarLemma Lemma ensures requires decreases
-hi def link fstarLemma Macro
-syn keyword fstarLet let in and
+hi def link fstarLemma keyword
+syn keyword fstarLet let in and rec
 hi def link fstarLet Keyword
 syn keyword fstarQuantifier forall exists
 hi def link fstarQuantifier Repeat
 
 " builtin types and kinds
-syn keyword fstarKinds Type S
-hi def link fstarKinds Define
-syn keyword fstarTypes nat int 
-syn keyword fstarTypes list string
-syn keyword fstarTypes bool unit 
-hi def link fstarTypes Boolean
-syn keyword fstarEffects Tot ML
-hi def link fstarEffects Type
-syn keyword fstarBoolean true false True False
-hi def link fstarBoolean Boolean
+syn keyword fstarBuiltinKinds Type S
+hi def link fstarBuiltinKinds Type
+syn keyword fstarBuiltinTypes nat int 
+syn keyword fstarBuiltinTypes list string
+syn keyword fstarBuiltinTypes bool unit 
+syn keyword fstarBuiltinTypes option
+hi def link fstarBuiltinTypes Type
+syn keyword fstarBuiltinEffects Tot ML 
+hi def link fstarBuiltinEffects Type
+syn keyword fstarBooleansAsValue true false 
+hi def link fstarBooleansAsValue Boolean
+syn keyword fstarBooleansAsType True False
+hi def link fstarBooleansAsType Boolean
 
 " conditional statements
 syn keyword fstarIf if then else
-hi def link fstarKind Conditional
+hi def link fstarIf Conditional
 syn keyword fstarMatch match with
 syn keyword fstarMatch function
 hi def link fstarMatch Conditional
@@ -69,16 +73,32 @@ hi def link fstarIdentifier Identifier
 
 " todo: i'd like to differentiate this from module names.
 syn match fstarConstructor "\<\u[a-zA-Z0-9_']*"
-hi def link fstarConstructor Function
+hi def link fstarConstructor Identifier
 
 syn match fstarTypeVariable "'\l[a-zA-Z0-9_]*"
-hi def link fstarTypeVariable Type
+hi def link fstarTypeVariable Identifier
+
+syn match fstarWildcard "\<_\>"
+hi def link fstarWildcard Identifier
 
 " operators
 syn keyword fstarValueOperator not and or
+syn match fstarValueOperator "<"
+syn match fstarValueOperator ">"
+syn match fstarValueOperator "="
+syn match fstarValueOperator "*"
+syn match fstarValueOperator "/"
+syn match fstarValueOperator "+"
+syn match fstarValueOperator "-"
+syn match fstarValueOperator "<>"
+syn match fstarTypeOperator "\~"
+syn match fstarTypeOperator "/\\"
+syn match fstarTypeOperator "\\/"
+syn match fstarTypeOperator "=="
+syn match fstarTypeOperator "==>"
+syn match fstarTypeOperator "<==>"
 hi def link fstarValueOperator Operator
-syn match fstarWildcard "\<_\>"
-hi def link fstarWildcard Operator
+hi def link fstarTypeOperator Operator
 
 " literals
 syn match fstarNumber "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
@@ -90,32 +110,6 @@ hi def link fstarNumber Number
 " todo: the hs & he suffixes don't appear to be working here.
 syn region fstarString start=+"+hs=e skip=+\\\\\|\\"+ end=+"+he=s contains=@Spell
 hi def link fstarString String
-
-"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="(" matchgroup=ocamlKeyword end=")" contains=ALLBUT,@ocamlContained,ocamlParenErr
-"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="{" matchgroup=ocamlKeyword end="}"  contains=ALLBUT,@ocamlContained,ocamlBraceErr
-"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="\[" matchgroup=ocamlKeyword end="\]" contains=ALLBUT,@ocamlContained,ocamlBrackErr
-"syn region   ocamlEncl transparent matchgroup=ocamlKeyword start="\[|" matchgroup=ocamlKeyword end="|\]" contains=ALLBUT,@ocamlContained,ocamlArrErr
-
-"syn match fstarDelimiter ","
-"syn match fstarDelimiter "->"
-"syn match fstarDelimiter ":"
-"syn match fstarDelimiter ";"
-"syn match fstarDelimiter "\."
-
-syn match fstarValueOperator "<"
-syn match fstarValueOperator ">"
-syn match fstarValueOperator "="
-syn match fstarValueOperator "*"
-syn match fstarValueOperator "/"
-syn match fstarValueOperator "+"
-syn match fstarValueOperator "-"
-syn match fstarTypeOperator "/\\"
-syn match fstarTypeOperator "\\/"
-syn match fstarTypeOperator "=="
-syn match fstarTypeOperator "==>"
-syn match fstarTypeOperator "<==>"
-hi def link fstarValueOperator Operator
-hi def link fstarTypeOperator Operator
 
 " Comments
 syn region fstarLineComment start="//"hs=e+1  end="$" keepend contains=@Spell
