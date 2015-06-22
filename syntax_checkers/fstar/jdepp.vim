@@ -16,6 +16,14 @@ if !exists('g:syntastic_fstar_jdepp_sort')
     let g:syntastic_fstar_jdepp_sort = 1
 endif
 
+if !exists('g:fstar_home')
+    let g:fstar_home = $FSTAR_HOME
+endif
+
+if !exists('g:fstar_cores')
+    let g:fstar_cores = 1
+endif
+
 let s:save_cpo = &cpo
 set cpo&vim
 
@@ -36,8 +44,8 @@ endfunction
 function! SyntaxCheckers_fstar_jdepp_GetLocList() dict
     let makeprg = self.makeprgBuild({
                 \ 'exe': 'jdepp',
-                \ 'args_before': '-a "-Dfstar=' . expand($FSTAR_HOME . "/lib") . '"',
-                \ 'post_args_before': '-- ' . expand($FSTAR_HOME . '/bin/fstar.exe')})
+                \ 'args_before': '-a "-Dfstar=' . expand(g:fstar_home . "/lib") . '"',
+                \ 'post_args_before': '-- ' . expand(g:fstar_home . '/bin/fstar.exe --n_cores '. g:fstar_cores)})
     " ERROR: Syntax error near line $LINE, character $COLUMN in file $FILE
     let errorformat = 'ERROR:\ %m\ near\ line %l\,\ character\ %c\ in\ file\ %f,'
     " $FILE($LINE,$COLUMN-6,16) : Error
@@ -55,7 +63,7 @@ endfunction
 call g:SyntasticRegistry.CreateAndRegisterChecker({
             \ 'filetype': 'fstar',
             \ 'name': 'jdepp',
-            \ 'exec': expand($FSTAR_HOME . '/bin/fstar.exe') })
+            \ 'exec': expand(g:fstar_home . '/bin/fstar.exe') })
 
 let &cpo = s:save_cpo
 unlet s:save_cpo
