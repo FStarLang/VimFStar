@@ -73,7 +73,7 @@ hi def link fstarIdentifier Identifier
 
 " todo: i'd like to differentiate this from module names.
 syn match fstarConstructor "\<\u[a-zA-Z0-9_']*"
-hi def link fstarConstructor Identifier
+hi def link fstarConstructor Constant
 
 syn match fstarTypeVariable "'\l[a-zA-Z0-9_]*"
 hi def link fstarTypeVariable Identifier
@@ -94,6 +94,8 @@ syn match fstarValueOperator "/"
 syn match fstarValueOperator "+"
 syn match fstarValueOperator "-"
 syn match fstarValueOperator "<>"
+syn match fstarValueOperator "&&"
+syn match fstarValueOperator "||"
 syn match fstarTypeOperator "\~"
 syn match fstarTypeOperator "/\\"
 syn match fstarTypeOperator "\\/"
@@ -102,6 +104,10 @@ syn match fstarTypeOperator "==>"
 syn match fstarTypeOperator "<==>"
 hi def link fstarValueOperator Operator
 hi def link fstarTypeOperator Operator
+
+syn match fstarDelimiter ";"
+syn match fstarDelimiter ","
+hi def link fstarDelimiter Delimiter
 
 " literals
 syn match fstarNumber "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
