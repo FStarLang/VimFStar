@@ -24,26 +24,24 @@ hi def link fstarTodo Todo
 " keywords
 syn keyword fstarAnnotation type val
 hi def link fstarAnnotation Keyword
-syn keyword fstarAssertion assert assume
+syn keyword fstarAssertion assert assume admit cut
 hi def link fstarAssertion Keyword
 syn keyword fstarLambda fun
 hi def link fstarLambda Keyword
 syn keyword fstarLemma Lemma ensures requires decreases
 hi def link fstarLemma keyword
-syn keyword fstarLet let in and rec
-hi def link fstarLet Keyword
 syn keyword fstarQuantifier forall exists
 hi def link fstarQuantifier Repeat
 
 " builtin types and kinds
-syn keyword fstarBuiltinKinds Type S
+syn keyword fstarBuiltinKinds Type S Effect
 hi def link fstarBuiltinKinds Type
 syn keyword fstarBuiltinTypes nat int 
 syn keyword fstarBuiltinTypes list string
 syn keyword fstarBuiltinTypes bool unit 
 syn keyword fstarBuiltinTypes option
 hi def link fstarBuiltinTypes Type
-syn keyword fstarBuiltinEffects Tot ML 
+syn keyword fstarBuiltinEffects Tot ML ST GTot
 hi def link fstarBuiltinEffects Type
 syn keyword fstarBooleansAsValue true false 
 hi def link fstarBooleansAsValue Boolean
@@ -81,11 +79,14 @@ hi def link fstarTypeVariable Identifier
 syn match fstarInferPrefix "#"
 hi def link fstarInferPrefix StorageClass
 
-syn match fstarWildcard "\<_\>"
-hi def link fstarWildcard Identifier
+syn region fstarPragma start="^#[a-z][a-z-]"  end="$" keepend contains=@Spell,fstarString
+hi def link fstarPragma PreProc
 
-" operators
-syn keyword fstarValueOperator not and or
+syn match fstarWildcard "\<_\>"
+hi def link fstarWildcard Special
+
+" symbols
+syn keyword fstarValueOperator not
 syn match fstarValueOperator "<"
 syn match fstarValueOperator ">"
 syn match fstarValueOperator "="
@@ -96,18 +97,21 @@ syn match fstarValueOperator "-"
 syn match fstarValueOperator "<>"
 syn match fstarValueOperator "&&"
 syn match fstarValueOperator "||"
-syn match fstarTypeOperator "\~"
-syn match fstarTypeOperator "/\\"
-syn match fstarTypeOperator "\\/"
-syn match fstarTypeOperator "=="
-syn match fstarTypeOperator "==>"
-syn match fstarTypeOperator "<==>"
+syn match fstarFormulaOperator "\~"
+syn match fstarFormulaOperator "/\\"
+syn match fstarFormulaOperator "\\/"
+syn match fstarFormulaOperator "=="
+syn match fstarFormulaOperator "==>"
+syn match fstarFormulaOperator "<==>"
 hi def link fstarValueOperator Operator
-hi def link fstarTypeOperator Operator
+hi def link fstarFormulaOperator Operator
 
 syn match fstarDelimiter ";"
 syn match fstarDelimiter ","
 hi def link fstarDelimiter Delimiter
+
+syn match fstarUnitLiteral "()"
+hi def link fstarUnitLiteral Constant
 
 " literals
 syn match fstarNumber "\<-\=\d\(_\|\d\)*\.\?\(_\|\d\)*\([eE][-+]\=\d\(_\|\d\)*\)\=\>"
@@ -119,6 +123,14 @@ hi def link fstarNumber Number
 " todo: the hs & he suffixes don't appear to be working here.
 syn region fstarString start=+"+hs=e skip=+\\\\\|\\"+ end=+"+he=s contains=@Spell
 hi def link fstarString String
+
+"" let as a region
+"syn region fstarLetIntro matchgroup=fstarLet start="let" end="=" contains=fstarIdentifier
+"syn keyword fstarLet in and rec
+" let as keywords only
+syn keyword fstarLet let in and rec
+
+hi def link fstarLet Keyword
 
 " Comments
 syn region fstarLineComment start="//"hs=e+1  end="$" keepend contains=@Spell
