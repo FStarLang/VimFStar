@@ -39,7 +39,7 @@ hi def link fstarBuiltinKinds Type
 syn keyword fstarBuiltinTypes nat int 
 syn keyword fstarBuiltinTypes list string
 syn keyword fstarBuiltinTypes bool unit 
-syn keyword fstarBuiltinTypes option
+syn keyword fstarBuiltinTypes option either
 hi def link fstarBuiltinTypes Type
 syn keyword fstarBuiltinEffects Tot ML ST GTot
 hi def link fstarBuiltinEffects Type
