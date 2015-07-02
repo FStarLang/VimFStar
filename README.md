@@ -6,7 +6,8 @@
 
 - `.fst` file detection.
 - Syntax highlighting (based on [Vim's OCaml syntax file]).
-- Interactive verification of code
+- Interactive verification of code.
+- [Syntastic] integration.
 
 ## Installation
 
@@ -55,6 +56,41 @@ If you want to use library files and/or set options, use ```build-config``` in y
 
 This configuration is read when the buffer is loaded or when the plugin is reset. So do not forget to reset the plugin if you change `build-config`.
 
+## Syntastic Integration
+
+*VimFStar* integrates with [Syntastic], if installed, to provide support for compiling and marking errors from within Vim.
+
+### Customizing the Dafny command arguments
+
+You can ask *Syntastic* to pass custom arguments to Dafny. For example, you can add the following to your `vimrc`:
+
+```vim
+let g:syntastic_fstar_fstar_args = '--n_cores 4'
+```
+
+### Passive Syntastic Checks
+
+*Syntastic*, by default, checks your sources when you save them to disk.
+
+Non-trivial F* programs may take significantly more time to verify than a compiler would take to compile a single source file. Unfortunately, Vim, being single-threaded, will freeze while F* is verifying your sources. We strongly recommend that you set Syntastic up to check your F* sources passively (on-demand) for this reason.
+
+Add the following to your `.vimrc` to set this up:
+
+```vim
+" (optional) set your leader key (the default is <\>)
+let mapleader=","
+" Tell Syntastic to:
+" - check files on save.
+" - but only check F* files when requested.
+let g:syntastic_mode_map = {
+        \ "mode": "active",
+        \ "passive_filetypes": ["fstar"] }
+" (optional) map "save and check current file" to <leader>c
+noremap <Leader>c :w<CR>:SyntasticCheck<CR>
+```
+
+Now, you can use `:SyntasticCheck` or, if you elected to do so, `,c` to check your dafny file.
+
 ## License
 
 *VimFStar* is distributed under the same license as Vim itself. See [LICENSE] for more details.
@@ -62,7 +98,6 @@ This configuration is read when the buffer is loaded or when the plugin is reset
 ## Planned Improvements
 
 - more accurate syntax highlighting.
-- [syntastic] integration.
 - better highlighting of verified code
 - quick access to error locations
 - ability to pop environment
