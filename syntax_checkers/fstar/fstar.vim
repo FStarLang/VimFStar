@@ -36,7 +36,7 @@ endfunction
 function! SyntaxCheckers_fstar_fstar_GetLocList() dict
     let makeprg = self.makeprgBuild({
                 \ 'exe': 'fstar.exe',
-                \ 'args_before': '--use_build_config '})
+                \ 'args_after': '--use_build_config '})
     " ERROR: Syntax error near line $LINE, character $COLUMN in file $FILE
     let errorformat = 'ERROR:\ %m\ near\ line %l\,\ character\ %c\ in\ file\ %f,'
     " $FILE($LINE,$COLUMN-6,16) : Error
