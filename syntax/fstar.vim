@@ -147,13 +147,13 @@ syn region   fstarKeyword start="\<module\>\s*\<type\>\(\s*\<of\>\)\=" matchgrou
 syn match    fstarMTDef "=\s*\w\(\w\|'\)*\>"hs=s+1,me=s+1 skipwhite skipempty nextgroup=fstarFullMod
 
 syn keyword  fstarKeyword  and as assume assert
-syn keyword  fstarKeyword  constraint else
+syn keyword  fstarKeyword  constraint decreases else ensures
 syn keyword  fstarKeyword  exception external fun
 
 syn keyword  fstarKeyword  in inherit initializer
-syn keyword  fstarKeyword  land lazy let match
-syn keyword  fstarKeyword  method mutable new of
-syn keyword  fstarKeyword  parser private raise rec
+syn keyword  fstarKeyword  land lazy let logic match
+syn keyword  fstarKeyword  method mutable new of opaque
+syn keyword  fstarKeyword  parser pattern private raise rec requires
 syn keyword  fstarKeyword  try type
 syn keyword  fstarKeyword  virtual when while with
 
