@@ -1,3 +1,7 @@
+if exists("b:did_ftplugin")
+  finish
+endif
+let b:did_ftplugin=1
 
 let s:path = system("echo $PATH")
 let s:jpath = substitute(s:path,":",",","g")
@@ -38,21 +42,21 @@ if !empty(s:matchs) && !exists('g:fstar_inter')
 
   py fstar_init()
 
-  command Funtil call Funtil()
+  command Funtil call Funtil_cursor()
   command Fresult call Fget_result()
   command Freset call Freset()
   command Fanswer call Fget_answer()
 
   "Here you can set the color you want for checked code
-  highlight FChecked ctermbg=darkgrey
+  highlight FChecked ctermbg=22, guibg=lightGreen
+endif
 
-  if !exists("g:fstar_inter_maps")
-    vnoremap <buffer> <F2> :<C-u>call Ftest_code()<CR>
-    nnoremap <buffer> <F2> :call Funtil_cursor()<CR>
-    nnoremap <buffer> <F3> :call Fget_result()<CR>
-    nnoremap <buffer> <F4> :call Fget_answer()<CR>
-    nnoremap <buffer> <F5> (v)k$<CR>
-    "<C-u> is to remove '<,'> which execute the command for each selected line
-  endif
 
+if !exists("g:fstar_inter_maps")
+  vnoremap <buffer> <F2> :<C-u>call Ftest_code()<CR>
+  nnoremap <buffer> <F2> :call Funtil_cursor()<CR>
+  nnoremap <buffer> <F3> :call Fget_result()<CR>
+  nnoremap <buffer> <F4> :call Fget_answer()<CR>
+  nnoremap <buffer> <F5> (v)k$<CR>
+  "<C-u> is to remove '<,'> which execute the command for each selected line
 endif
