@@ -60,3 +60,21 @@ if !exists("g:fstar_inter_maps")
   nnoremap <buffer> <F5> (v)k$<CR>
   "<C-u> is to remove '<,'> which execute the command for each selected line
 endif
+
+
+" Add mappings, unless the user didn't want this.
+if !exists("no_plugin_maps") && !exists("no_fstar_maps")
+  " (un)commenting
+  if !hasmapto('<Plug>Comment')
+    nmap <buffer> <LocalLeader>c <Plug>LUncomOn
+    xmap <buffer> <LocalLeader>c <Plug>BUncomOn
+    nmap <buffer> <LocalLeader>C <Plug>LUncomOff
+    xmap <buffer> <LocalLeader>C <Plug>BUncomOff
+  endif
+
+  nnoremap <buffer> <Plug>LUncomOn gI(* <End> *)<ESC>
+  nnoremap <buffer> <Plug>LUncomOff :s/^(\* \(.*\) \*)/\1/<CR>:noh<CR>
+  xnoremap <buffer> <Plug>BUncomOn <ESC>:'<,'><CR>`<O<ESC>0i(*<ESC>`>o<ESC>0i*)<ESC>`<
+  xnoremap <buffer> <Plug>BUncomOff <ESC>:'<,'><CR>`<dd`>dd`<
+endif
+
