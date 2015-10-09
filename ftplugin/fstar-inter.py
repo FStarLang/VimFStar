@@ -57,29 +57,9 @@ def fstar_writeinter (s) :
     global fst
     fst.stdin.write(s)
 
-def fstar_get_config_from_buf() :
-    startl = int(vim.eval('search(\'(\\*--build-config\')')) + 1
-    endl = int(vim.eval('search(\'--\*)\')')) - 1
-    if startl == 0 :
-        return []
-    configlines = vim.eval("getline(%d,%d)"%(startl,endl))
-    configlines = ''.join(configlines)
-    configlines = configlines.split(';')
-    response=[]
-    for line in configlines :
-        line = line.strip(' \t\n\r')
-        temp = line.split(':')
-        if(temp[0] == 'options'):
-            response = response + (temp[1].split(' '))
-        if(temp[0] == 'other-files'):
-            response = response + (temp[1].split(' '))
-            
-    return response
-
-
 def fstar_init () :
     global fst,interout
-    fst=Popen([fstarpath,'--in']+fstar_get_config_from_buf(),stdin=PIPE, stdout=PIPE,bufsize=1,close_fds=ON_POSIX)
+    fst=Popen([fstarpath,'--in'],stdin=PIPE, stdout=PIPE,bufsize=1,close_fds=ON_POSIX)
     interout=Queue()
     t=Thread(target=fstar_enqueue_output,args=(fst.stdout,interout))
     t.daemon=True
@@ -94,7 +74,7 @@ def fstar_reset() :
     fstarupdatehi=False
     fstar_reset_hi()
     fstar_init()
-    print 'Interaction reseted'
+    print 'Interaction reset'
 
 
 def fstar_test_code (code,keep) :
