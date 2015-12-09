@@ -4,7 +4,6 @@
 " Maintainers:  Michael Lowell Roberts <mirobert at microsoft dot com>
 " URL:          http://research.microsoft.com/en-us/projects/fstar/
 "
-" Based on the ocaml.vim syntax file distributed with Vim.
 " Distributed under the VIM LICENSE. Please refer to the LICENSE file or
 " visit <http://vimdoc.sourceforge.net/htmldoc/uganda.html> for details.
 
@@ -16,6 +15,11 @@ endif
 
 " F* is case sensitive.
 syn case match
+
+" todo: need to verify that this is the right strategy.
+syn sync fromstart
+syn sync maxlines=50
+syn sync maxlines=500
 
 " This seems to be a common trope.
 syn keyword fstarTodo contained TODO todo FIXME XXX NOTE
