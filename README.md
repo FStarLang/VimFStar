@@ -19,7 +19,7 @@ If you're using [vim-plug], for example, perform the following steps to install 
 	```vim
 	call plug#begin()
 	" ...
-	Plug 'FStarLang/VimFStar' {'for': 'fstar'}
+	Plug 'FStarLang/VimFStar', {'for': 'fstar'}
 	" ...
 	call plug#end()
 	```
