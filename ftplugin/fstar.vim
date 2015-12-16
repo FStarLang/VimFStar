@@ -38,6 +38,12 @@ let s:matchs = Ffind_fstar ()
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
   let g:fstar_inter = 1
+
+  py import sys
+  py import os.path
+  py import vim
+  py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand("<sfile>:p:h")'), '../plugin/VimFStar.py'))), '--vim' ]
+  py sys.path.insert(0, os.path.dirname(sys.argv[0]))
   pyfile <sfile>:p:h/../plugin/VimFStar.py
 
   fu! Ftest_code ()
