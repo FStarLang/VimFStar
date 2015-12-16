@@ -209,3 +209,5 @@ def fstar_get_current_line () :
     log("fstar_get_current_line()")
     global fstarcurrentline
     print fstarcurrentline
+
+#print "VimFStar loaded!"

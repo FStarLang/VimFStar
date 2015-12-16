@@ -38,7 +38,7 @@ let s:matchs = Ffind_fstar ()
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
   let g:fstar_inter = 1
-  pyfile <sfile>:p:h/fstar-inter.py
+  pyfile <sfile>:p:h/VimFStar.py
 
   fu! Ftest_code ()
     py fstar_vim_test_code()
