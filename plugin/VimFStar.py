@@ -1,13 +1,14 @@
 import sys
 
 from VimFStar import *
-log = Log.Log()
+log = Log.Log(shown_tags=['trace', 'debug'])
+log.Print('info', lambda: "Welcome to VimFStar!")
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == '--vim':
-        log.Print('info', lambda: "I was invoked from within a Vim environment.")
+        log.Print(['info', 'debug'], lambda: "I was invoked from within a Vim environment.")
     else:
-        log.Print('info', lambda: "I was invoked from the command line.")
+        log.Print(['info', 'debug'], lambda: "I was invoked from the command line.")
 
 # legacy code starts here
 
