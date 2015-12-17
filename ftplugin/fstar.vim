@@ -3,48 +3,28 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin=1
 
-fu! Ffind_fstar ()
-   " convert the system path to a comma-separated list of directories
-   " suitable for globpath() consumption.
-   " 
-   " first, commas must be escaped with a backslash.
-   " todo: test a path with a comma in it to make sure this works.
-   let l:jpath = substitute($PATH,",","\\,","g")
-   " different platforms use different path separators.
-   if has('win32')
-      " additionally, Windows paths need to have trailing backslashes removed.
-      let l:jpath = substitute(l:jpath,"\\;",";","g")
-      let l:jpath = substitute(l:jpath,";",",","g")
-   else
-      let l:jpath = substitute(l:jpath,":",",","g")
-   endif
-   " todo: ask regarding why newlines would be in $PATH?
-   let l:jpath = substitute(l:jpath,"\n","","g")
-"   Decho("[Ffind_fstar] l:jpath=" . l:jpath)
-
-   let l:matchs = globpath(l:jpath,"fstar.exe")
-"   Decho("[Ffind_fstar] l:matchs=" . l:matchs)
-   return l:matchs
-endfunction
-
-let s:matchs = Ffind_fstar ()
-
 "Disable interactive feature
 "let g:fstar_inter = 1
 
 "Disable mappings
 "let g:fstar_inter_maps = 1
 
+py import sys
+py import os.path
+py import vim
+py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand("<sfile>:p:h")'), '../plugin/VimFStar.py'))), '--vim' ]
+py sys.path.insert(0, os.path.dirname(sys.argv[0]))
+pyfile <sfile>:p:h/../plugin/VimFStar.py
+
+fu! VimFStar_FindFStarExe()
+   py vimfstar_find_fstar_exe()
+   return l:pyresult
+endfunction
+let s:matchs = VimFStar_FindFStarExe()
+
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
   let g:fstar_inter = 1
-
-  py import sys
-  py import os.path
-  py import vim
-  py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand("<sfile>:p:h")'), '../plugin/VimFStar.py'))), '--vim' ]
-  py sys.path.insert(0, os.path.dirname(sys.argv[0]))
-  pyfile <sfile>:p:h/../plugin/VimFStar.py
 
   fu! Ftest_code ()
     py fstar_vim_test_code()

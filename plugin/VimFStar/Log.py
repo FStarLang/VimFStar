@@ -1,6 +1,6 @@
 import sys
 
-class Log:
+class Log(object):
 
     def __init__(self, **kwargs):
 

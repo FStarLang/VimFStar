@@ -22,8 +22,18 @@
     <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="VimFStar.py" />
-    <Compile Include="VimFStar\Log.py" />
+    <Compile Include="VimFStar.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VimFStar\Cli.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VimFStar\Log.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="VimFStar\Plugin.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VimFStar\__init__.py">
       <SubType>Code</SubType>
     </Compile>
