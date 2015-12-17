@@ -22,6 +22,13 @@ fu! VimFStar_FindFStarExe()
 endfunction
 let s:matchs = VimFStar_FindFStarExe()
 
+fu! VimFStar_TestFunction(to_whom)
+   py vimfstar_test_function()
+   return l:pyresult
+endfunction
+let s:result = VimFStar_TestFunction('friend')
+echom 'result =' . s:result
+
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
   let g:fstar_inter = 1
