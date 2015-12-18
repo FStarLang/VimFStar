@@ -16,19 +16,21 @@ py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand(
 py sys.path.insert(0, os.path.dirname(sys.argv[0]))
 pyfile <sfile>:p:h/../plugin/VimFStar.py
 
-fu! VimFStar_FindFStarExe()
-   py vimfstar_find_fstar_exe()
-   return l:pyresult
+fu! s:import_python_function(fn_name, arg_names)
+   let l:viml_name = "s:" . a:fn_name
+   let l:body = "fu! " . l:viml_name . "(" . join(a:arg_names, ",") . ")\n"
+   let l:body .= "   let l:pycall = '" . a:fn_name . "'\n"
+   let l:body .= "   py plugin.invoke_from_vim()\n"
+   let l:body .= "   return l:pyresult\n"
+   let l:body .= "endfunction"
+   execute l:body
 endfunction
-let s:matchs = VimFStar_FindFStarExe()
 
-fu! VimFStar_TestFunction(to_whom)
-   let l:pycall = 'say_hai'
-   py plugin.invoke_from_vim()
-   return l:pyresult
-endfunction
-let s:result = VimFStar_TestFunction('friend')
-echom 'result =' . s:result
+call s:import_python_function('find_fstar_exe', [])
+call s:import_python_function('say_hai', ['to_whom'])
+call s:say_hai('buddy!')
+
+let s:matchs = s:find_fstar_exe()
 
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
