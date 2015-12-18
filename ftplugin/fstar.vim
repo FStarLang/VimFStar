@@ -23,7 +23,8 @@ endfunction
 let s:matchs = VimFStar_FindFStarExe()
 
 fu! VimFStar_TestFunction(to_whom)
-   py vimfstar_test_function()
+   let l:pycall = 'say_hai'
+   py plugin.invoke_from_vim()
    return l:pyresult
 endfunction
 let s:result = VimFStar_TestFunction('friend')

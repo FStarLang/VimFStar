@@ -34,6 +34,9 @@
     <Compile Include="VimFStar\Plugin.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VimFStar\VimStubs.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VimFStar\__init__.py">
       <SubType>Code</SubType>
     </Compile>

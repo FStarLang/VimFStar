@@ -1,7 +1,6 @@
 import sys
-import copy
-
 from VimFStar import *
+
 log = Log.Log(shown_tags=['trace', 'debug', 'verbose'])
 cli = Cli.Cli(sys.argv, log)
 plugin = Plugin.Plugin(log)
@@ -11,13 +10,12 @@ def vimfstar_find_fstar_exe():
     result = plugin.find_fstar_exe()
     vim.command('let l:pyresult = %r' % result)
 
-vimfstar_test_function = plugin.export(plugin.say_hai)
-
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == '--vim':
         log.Print(['debug'], lambda: "I was invoked from within a Vim environment.")
     else:
         log.Print(['debug'], lambda: "I was invoked from the command line.")
+        s = plugin.find_fstar_exe()
 
 # legacy code starts here
 
