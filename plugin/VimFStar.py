@@ -1,5 +1,6 @@
 import sys
 from VimFStar import *
+import time
 
 log = Log.Log(shown_tags=['trace', 'debug', 'verbose'])
 cli = Cli.Cli(sys.argv, log)
@@ -15,7 +16,12 @@ if __name__ == '__main__':
         log.Print(['debug'], lambda: "I was invoked from within a Vim environment.")
     else:
         log.Print(['debug'], lambda: "I was invoked from the command line.")
-        s = plugin.find_fstar_exe()
+        plugin.start()
+        plugin.write("assert(0 == 1)")
+        plugin.write("#end")
+        plugin.write("o hai")
+        time.sleep(100000)
+
 
 # legacy code starts here
 
