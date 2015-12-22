@@ -16,11 +16,14 @@ if __name__ == '__main__':
         log.Print(['debug'], lambda: "I was invoked from within a Vim environment.")
     else:
         log.Print(['debug'], lambda: "I was invoked from the command line.")
+        plugin.initialize(exe_path=b'C:\\Users\\mirobert\\Documents\\wip\\Echo\\Echo\\bin\\Debug\\Echo.exe')
+        print plugin.exe_path()
         plugin.start()
-        plugin.write("assert(0 == 1)")
-        plugin.write("#end")
-        plugin.write("o hai")
-        time.sleep(100000)
+        i = 0
+        while i < 100:
+            plugin.write_line('o hai #%s' % str(i))
+            time.sleep(1)
+            i = i + 1
 
 
 # legacy code starts here
