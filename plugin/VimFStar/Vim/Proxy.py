@@ -31,7 +31,7 @@ class Proxy(object):
         if self.__error == None:
             self.__error = e
         if HAS_VIM:
-            self.__log.write_line('error', lambda: 'Uncaught Python exception in `%s`: %s' % (name, e))
+            self.__log.writeline('error', lambda: 'Uncaught Python exception in `%s`: %s' % (name, e))
 
     def __vimcall(self, f):
         def vimcall():
@@ -45,9 +45,9 @@ class Proxy(object):
                 del kwargs['0']
                 del kwargs['firstline']
                 del kwargs['lastline']
-                self.__log.write_line('trace', lambda: '%s(*args=%s, **kwargs=%s)' % (name, args, kwargs))
+                self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s)' % (name, args, kwargs))
                 result = f(*args, **kwargs)
-                self.__log.write_line('trace', lambda: '%s(*args=%s, **kwargs=%s) returned %s' % (name, args, kwargs, result))
+                self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s) returned %s' % (name, args, kwargs, result))
                 # todo: we don't yet have a good story for return values.
                 vim.command('let l:pyresult = %r' % result)
             except Exception as e:

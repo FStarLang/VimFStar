@@ -24,7 +24,7 @@ class Log(object):
         else:
             return set([tags])
 
-    def write_line(self, tags, msg):
+    def writeline(self, tags, msg):
         t = self.__coerce_tags(tags)
         i = t & self.__shown_tags
         if len(i) > 0:

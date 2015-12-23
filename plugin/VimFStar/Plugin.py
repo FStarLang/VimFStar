@@ -25,12 +25,12 @@ class Plugin(object):
 
     def __find_exe_path(self, exe_filespec):
         path = os.getenv('PATH', os.defpath).split(os.pathsep)
-        self.__log.write_line('debug', lambda: 'Searching for F* executable; search path is: %r' % path)
+        self.__log.writeline('debug', lambda: 'Searching for F* executable; search path is: %r' % path)
         for dir in path:
             matches = glob.glob(os.path.normpath(os.path.join(dir, exe_filespec)))
             if len(matches) > 0:
                 exe_path = matches[0]
-                self.__log.write_line('verbose', lambda: 'Found F* exectuable at `%s`.' % exe_path)
+                self.__log.writeline('verbose', lambda: 'Found F* exectuable at `%s`.' % exe_path)
                 return exe_path
         raise RuntimeError('Unable to find F* executable using filespec `%s`; please check your search path if you need all features of VimFStar to work properly.' % exe_filespec)
 
@@ -48,11 +48,11 @@ class Plugin(object):
     #no waiting read as in http://stackoverflow.com/a/4896288/2598986
     def __thread_proc(self, out, queue):
         for line in iter(out.readline, b''):
-            self.__log.write_line('debug', lambda: 'f* -> `%s`' % line)
+            self.__log.writeline('debug', lambda: 'f* -> `%s`' % line)
             # is this threadsafe?
             queue.put(line)
         out.close()
-        self.__log.write_line('info', lambda: 'f* has terminated')
+        self.__log.writeline('info', lambda: 'f* has terminated')
         self.__thread = None
         self.__proc = None
         self.__good = False
@@ -72,8 +72,8 @@ class Plugin(object):
         self.__proc = p
         self.__good = True
 
-    def write_line(self, s) :
-        self.__log.write_line('debug', lambda: "`%s` -> f*" % s)
+    def writeline(self, s) :
+        self.__log.writeline('debug', lambda: "`%s` -> f*" % s)
         self.__proc.stdin.write('%s\n' % s)
         self.__proc.stdin.flush()
 
