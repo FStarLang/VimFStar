@@ -17,8 +17,10 @@ if __name__ == '__main__':
         plugin.start()
         i = 0
         while i < 100:
+            plugin.poll()
             plugin.writeline('o hai #%s' % str(i))
             time.sleep(1)
+            plugin.poll()
             i = i + 1
 
 

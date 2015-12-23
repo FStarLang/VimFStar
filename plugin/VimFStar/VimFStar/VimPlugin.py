@@ -15,6 +15,9 @@ class VimPlugin(object):
         self.__log = kwargs.get('log')
 
     def initialize(self, **kwargs):
+        self.__thread = None
+        self.__proc = None
+        self.__queue = None
         exe_filespec = kwargs.get('exe_filespec', None)
         exe_path = kwargs.get('exe_path', None)
         if exe_path != None and exe_filespec != None:
@@ -46,16 +49,15 @@ class VimPlugin(object):
         return self.__exe_path
 
     #no waiting read as in http://stackoverflow.com/a/4896288/2598986
-    def __thread_proc(self, out, queue):
-        for line in iter(out.readline, b''):
-            self.__log.writeline('debug', lambda: 'f* -> `%s`' % line)
-            # is this threadsafe?
-            queue.put(line)
-        out.close()
-        self.__log.writeline('info', lambda: 'f* has terminated')
-        self.__thread = None
-        self.__proc = None
-        self.__good = False
+    def __thread_proc(self, proc, queue):
+        try:
+            for line in iter(proc.stdout.readline, b''):
+                self.__log.writeline('debug', lambda: 'f* -> %r' % line)
+                queue.put(('stdout', line))
+            out.close()
+            self.__log.writeline('info', lambda: 'f* has terminated')
+        except Exception as e:
+            queue.put('raise', e)
 
     def start(self) :
         p = subprocess.Popen(
@@ -65,15 +67,34 @@ class VimPlugin(object):
             bufsize=1, 
             close_fds=ON_POSIX)
         q = Queue.Queue()
-        t = threading.Thread(target=self.__thread_proc, args=(p.stdout, q))
+        t = threading.Thread(target=self.__thread_proc, args=(p, q))
         t.daemon = True
         t.start()
         self.__thread = t
         self.__proc = p
-        self.__good = True
+        self.__queue = q
 
     def writeline(self, s) :
-        self.__log.writeline('debug', lambda: "`%s` -> f*" % s)
+        self.__log.writeline('debug', lambda: "%r -> f*" % s)
         self.__proc.stdin.write('%s\n' % s)
         self.__proc.stdin.flush()
+
+    def poll(self):
+        try:
+            event = self.__queue.get_nowait()
+        except Queue.Empty:
+            return
+        self.__handle_event(event)
+
+    def __handle_event(self, event):
+        self.__log.writeline('debug', lambda: 'primary thread got event (%r, %r)' % event)
+        id, arg = event
+        if id == 'stdout':
+            return
+        if id == 'raise':
+            raise arg
+        else:
+            raise RuntimeError('Unrecognized process thread event id: %r' % id)
+
+
 
