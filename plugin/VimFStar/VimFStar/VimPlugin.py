@@ -13,12 +13,13 @@ class VimPlugin(object):
 
     def __init__(self, **kwargs):
         self.__log = kwargs.get('log')
-
-    def initialize(self, **kwargs):
+        self.__notify_func = kwargs.get('notify_func')
         self.__stdout_thread = None
         self.__stderr_thread = None
         self.__proc = None
         self.__queue = None
+
+    def initialize(self, **kwargs):
         exe_filespec = kwargs.get('exe_filespec', None)
         exe_path = kwargs.get('exe_path', None)
         if exe_path != None and exe_filespec != None:
@@ -55,6 +56,7 @@ class VimPlugin(object):
             for line in iter(file.readline, b''):
                 self.__log.writeline('debug', lambda: 'f* -> %r' % line)
                 queue.put((name, line))
+                self.__notify_func()
             out.close()
             self.__log.writeline('verbose', lambda: '%s thread has detected that f* has terminated' % name)
         except Exception as e:
@@ -85,12 +87,13 @@ class VimPlugin(object):
         self.__proc.stdin.write('%s\n' % s)
         self.__proc.stdin.flush()
 
-    def poll(self):
+    def refresh(self):
         try:
             event = self.__queue.get_nowait()
         except Queue.Empty:
-            return
+            return 0
         self.__handle_event(event)
+        return 1
 
     def __handle_event(self, event):
         self.__log.writeline('debug', lambda: 'primary thread got event (%r, %r)' % event)

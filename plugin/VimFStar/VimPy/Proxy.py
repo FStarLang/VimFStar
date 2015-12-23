@@ -1,3 +1,6 @@
+import os
+import sys
+
 from Log import Log
 
 try:
@@ -8,6 +11,8 @@ except ImportError:
     HAS_VIM = False
     import Stubs as vim
 
+HAS_WINDOWS = sys.platform == "win32"
+
 class Proxy(object):
     """Proxy logic for Vim plugins"""
 
@@ -17,9 +22,13 @@ class Proxy(object):
             self.__log = Log()
         else:
             self.__log = log_arg
-        self.__target = cons(log=self.__log)
         self.__vimargs = None
         self.__error = None
+        self.__notify_func = self.__get_notify_func()
+        plugin_kwargs = dict()
+        plugin_kwargs['log'] = self.__log
+        plugin_kwargs['notify_func'] = self.__notify_func
+        self.__target = cons(**plugin_kwargs)
 
     def __getattr__(self, name):
         global HAS_VIM
@@ -39,6 +48,26 @@ class Proxy(object):
         if HAS_VIM:
             self.__log.writeline('error', lambda: 'Uncaught Python exception in `%s`: %s' % (name, e))
 
+    def __get_notify_func(self):
+        global HAS_VIM
+        if not HAS_VIM or vim.eval('has("gui")') == "0":
+            def f():
+                self.__log.writeline('verbose', 'notification is unavailable; manually refresh to see updates.')
+            return f
+        server_name = vim.eval('v:servername')
+        gvim_path = vim.eval('v:programname')
+        expr = "g:vimfstar_refresh()"
+        command = "%s --servername %s --remote-expr %s" % (gvim_path, server_name, expr)
+        global HAS_WINDOWS
+        if HAS_WINDOWS:
+            command = "start %s" % command
+        else:
+            command = "%s &" % command
+        def f():
+            self.__log.writeline('verbose', lambda: 'executing os.system(%r)' % command)
+            #os.system(command)
+        return f
+
     def __vimcall(self, f):
         def vimcall():
             try:
@@ -55,7 +84,7 @@ class Proxy(object):
                 result = f(*args, **kwargs)
                 self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s) returned %s' % (name, args, kwargs, result))
                 # todo: we don't yet have a good story for return values.
-                vim.command('let l:pyresult = %r' % result)
+                vim.command('let l:pyresult = %r' % str(result))
             except Exception as e:
                 self.__set_error(e)
             finally:
