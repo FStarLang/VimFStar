@@ -1,1 +1,1 @@
-__all__ = ['Cli', 'Log', 'Plugin']
+__all__ = ['Cli', 'Log', 'Plugin', 'Vim']

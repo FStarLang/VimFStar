@@ -12,18 +12,25 @@ class Log(object):
         self.__shown_tags = set() if ignore_default else set(['error', 'warning', 'info', 'vim'])
         self.__shown_tags = self.__shown_tags | set(kwargs.get('shown_tags', []))
 
-    def Print(self, t, get_msg):
-
-        if isinstance(t, list):
-            x = set(t)
+    def __coerce_msg(self, msg):
+        if hasattr(msg, '__call__'):
+            return msg()
         else:
-            x = set([t])
+            return str(msg)
 
-        i = x & self.__shown_tags
+    def __coerce_tags(self, tags):
+        if isinstance(tags, list):
+            return set(tags)
+        else:
+            return set([tags])
+
+    def write_line(self, tags, msg):
+        t = self.__coerce_tags(tags)
+        i = t & self.__shown_tags
         if len(i) > 0:
             l = list(i)
             l.sort()
-            s = get_msg()
+            s = self.__coerce_msg(msg)
             if 'error' in i or 'warning' in i:
                 # errors messages will be written to all error outputs.
                 self.__err.write("%r %s\n" % (l, s))

@@ -31,10 +31,14 @@
     <Compile Include="VimFStar\Log.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VimFStar\Vim\Proxy.py" />
+    <Compile Include="VimFStar\Vim\__init__.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VimFStar\Plugin.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="VimFStar\VimStubs.py">
+    <Compile Include="VimFStar\Vim\Stubs.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="VimFStar\__init__.py">
@@ -46,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="VimFStar\" />
+    <Folder Include="VimFStar\Vim\" />
   </ItemGroup>
   <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
