@@ -75,4 +75,5 @@ class Plugin(object):
     def write_line(self, s) :
         self.__log.write_line('debug', lambda: "`%s` -> f*" % s)
         self.__proc.stdin.write('%s\n' % s)
+        self.__proc.stdin.flush()
 
