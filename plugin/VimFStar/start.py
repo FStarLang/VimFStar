@@ -1,14 +1,14 @@
 import sys
-from VimFStar import *
 import time
-
-log = Log.Log(shown_tags=['trace', 'debug', 'verbose'])
-cli = Cli.Cli(sys.argv, log)
-plugin = Vim.Proxy(Plugin.Plugin(log), log)
-log.writeline(['info', 'welcome'], lambda: "Welcome to VimFStar!")
+import VimFStar
+import VimPy
 
 if __name__ == '__main__':
-    if len(sys.argv) == 2 and sys.argv[1] == '--vim':
+    log = VimPy.Log(shown_tags=['trace', 'debug', 'verbose'])
+    plugin = VimPy.Proxy(VimFStar.VimPlugin, log=log)
+    log.writeline(['info', 'welcome'], lambda: "Welcome to VimFStar!")
+
+    if VimPy.HAS_VIM:
         log.writeline(['debug'], lambda: "I was invoked from within a Vim environment.")
     else:
         log.writeline(['debug'], lambda: "I was invoked from the command line.")

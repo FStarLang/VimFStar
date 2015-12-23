@@ -1,3 +1,5 @@
+from Log import Log
+
 try:
     global HAS_VIM
     import vim
@@ -9,9 +11,13 @@ except ImportError:
 class Proxy(object):
     """Proxy logic for Vim plugins"""
 
-    def __init__(self, target, log):
-        self.__target = target
-        self.__log = log
+    def __init__(self, cons, **kwargs):
+        log_arg = kwargs.get('log', None)
+        if log_arg is None:
+            self.__log = Log()
+        else:
+            self.__log = log_arg
+        self.__target = cons(log=self.__log)
         self.__vimargs = None
         self.__error = None
 

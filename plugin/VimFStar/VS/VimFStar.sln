@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VimFStar", "VimFStar.pyproj", "{8DBCAC34-59E5-49A4-89FC-14C26CBA82FF}"
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "VimFStar", "VimFStar.pyproj", "{CC423B28-1877-444B-99A1-4D57206D0512}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,8 +11,8 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8DBCAC34-59E5-49A4-89FC-14C26CBA82FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DBCAC34-59E5-49A4-89FC-14C26CBA82FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC423B28-1877-444B-99A1-4D57206D0512}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC423B28-1877-444B-99A1-4D57206D0512}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

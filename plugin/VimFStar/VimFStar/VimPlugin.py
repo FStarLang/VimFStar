@@ -8,11 +8,11 @@ import threading
 
 ON_POSIX = 'posix' in sys.builtin_module_names
 
-class Plugin(object):
+class VimPlugin(object):
     """VimFStar plugin logic"""
 
-    def __init__(self, log, **kwargs):
-        self.__log = log
+    def __init__(self, **kwargs):
+        self.__log = kwargs.get('log')
 
     def initialize(self, **kwargs):
         exe_filespec = kwargs.get('exe_filespec', None)
