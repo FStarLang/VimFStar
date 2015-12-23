@@ -15,7 +15,8 @@ class VimPlugin(object):
         self.__log = kwargs.get('log')
 
     def initialize(self, **kwargs):
-        self.__thread = None
+        self.__stdout_thread = None
+        self.__stderr_thread = None
         self.__proc = None
         self.__queue = None
         exe_filespec = kwargs.get('exe_filespec', None)
@@ -49,28 +50,33 @@ class VimPlugin(object):
         return self.__exe_path
 
     #no waiting read as in http://stackoverflow.com/a/4896288/2598986
-    def __thread_proc(self, proc, queue):
+    def __thread_proc(self, name, file, queue):
         try:
-            for line in iter(proc.stdout.readline, b''):
+            for line in iter(file.readline, b''):
                 self.__log.writeline('debug', lambda: 'f* -> %r' % line)
-                queue.put(('stdout', line))
+                queue.put((name, line))
             out.close()
-            self.__log.writeline('info', lambda: 'f* has terminated')
+            self.__log.writeline('verbose', lambda: '%s thread has detected that f* has terminated' % name)
         except Exception as e:
-            queue.put('raise', e)
+            queue.put(('raise', e))
 
     def start(self) :
         p = subprocess.Popen(
             [self.__exe_path, '--in'], 
             stdin=subprocess.PIPE, 
             stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             bufsize=1, 
             close_fds=ON_POSIX)
         q = Queue.Queue()
-        t = threading.Thread(target=self.__thread_proc, args=(p, q))
+        t = threading.Thread(target=self.__thread_proc, args=('stdout', p.stdout, q))
         t.daemon = True
         t.start()
-        self.__thread = t
+        self.__stdout_thread = t
+        t = threading.Thread(target=self.__thread_proc, args=('stderr', p.stderr, q))
+        t.daemon = True
+        t.start()
+        self.__stderr_thread = t
         self.__proc = p
         self.__queue = q
 
@@ -88,13 +94,15 @@ class VimPlugin(object):
 
     def __handle_event(self, event):
         self.__log.writeline('debug', lambda: 'primary thread got event (%r, %r)' % event)
-        id, arg = event
-        if id == 'stdout':
+        name, arg = event
+        if name == 'stdout':
             return
-        if id == 'raise':
+        if name == 'stderr':
+            return
+        if name == 'raise':
             raise arg
         else:
-            raise RuntimeError('Unrecognized process thread event id: %r' % id)
+            raise RuntimeError('Unrecognized process thread event name: %r' % name)
 
 
 
