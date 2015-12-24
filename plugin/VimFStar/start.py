@@ -1,11 +1,15 @@
+import os
 import sys
 import time
+
 import VimFStar
 import VimPy
 
 if __name__ == '__main__':
-    log = VimPy.Log(shown_tags=['trace', 'debug', 'verbose'])
-    plugin = VimPy.Proxy(VimFStar.VimPlugin, log=log)
+    log_path = os.path.normpath(os.path.expanduser('~/.VimFStar.log'))
+    log_file = open(log_path, 'a')
+    log = VimPy.Log(out=log_file, err=log_file, active_tags=['trace', 'debug', 'verbose'])
+    plugin = VimPy.Proxy(VimFStar.VimPlugin, name='VimFStar', log=log)
     log.writeline(['info', 'welcome'], lambda: "Welcome to VimFStar!")
 
     if VimPy.HAS_VIM:

@@ -12,25 +12,31 @@ let b:did_ftplugin=1
 py import sys
 py import os.path
 py import vim
-py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand("<sfile>:p:h")'), '../plugin/VimFStar.py'))), '--vim' ]
+py sys.argv = [ os.path.normcase(os.path.normpath(os.path.join(vim.eval('expand("<sfile>:p:h")'), '../plugin/VimFStar/start.py'))) ]
 py sys.path.insert(0, os.path.dirname(sys.argv[0]))
-pyfile <sfile>:p:h/../plugin/VimFStar.py
+pyfile <sfile>:p:h/../plugin/VimFStar/start.py
 
 fu! s:import_python_function(fn_name, arg_names)
    let l:viml_name = "s:" . a:fn_name
    let l:body = "fu! " . l:viml_name . "(" . join(a:arg_names, ",") . ")\n"
    let l:body .= "   let l:pycall = '" . a:fn_name . "'\n"
-   let l:body .= "   py plugin.invoke_from_vim()\n"
+   let l:body .= "   py plugin.vimcall()\n"
    let l:body .= "   return l:pyresult\n"
    let l:body .= "endfunction"
    execute l:body
 endfunction
 
-call s:import_python_function('find_fstar_exe', [])
-call s:import_python_function('say_hai', ['to_whom'])
-call s:say_hai('buddy!')
+call s:import_python_function('start', [])
+call s:import_python_function('refresh', [])
+call s:import_python_function('find_exe_path', ['filespec'])
+call s:import_python_function('set_exe_path', ['path'])
+call s:import_python_function('get_exe_path', [])
 
-let s:matchs = s:find_fstar_exe()
+call s:set_exe_path('C:\Users\mirobert\Documents\wip\Echo\Echo\bin\Debug\Echo.exe')
+call s:start()
+
+"let s:matchs = s:exe_path()
+let s:matchs = ""
 
 if !empty(s:matchs) && !exists('g:fstar_inter')
 

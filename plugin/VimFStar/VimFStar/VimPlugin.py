@@ -19,27 +19,18 @@ class VimPlugin(object):
         self.__proc = None
         self.__queue = None
 
-    def initialize(self, **kwargs):
-        exe_filespec = kwargs.get('exe_filespec', None)
-        exe_path = kwargs.get('exe_path', None)
-        if exe_path != None and exe_filespec != None:
-            self.__log('warning', lambda: 'the exe_filespec option is ignored if exe_path is set.')
-        if exe_path == None:
-            exe_path = self.__find_exe_path(exe_filespec)
-        self.__set_exe_path(exe_path)
-
-    def __find_exe_path(self, exe_filespec):
+    def find_exe_path(self, filespec):
         path = os.getenv('PATH', os.defpath).split(os.pathsep)
         self.__log.writeline('debug', lambda: 'Searching for F* executable; search path is: %r' % path)
         for dir in path:
-            matches = glob.glob(os.path.normpath(os.path.join(dir, exe_filespec)))
+            matches = glob.glob(os.path.normpath(os.path.join(dir, filespec)))
             if len(matches) > 0:
                 exe_path = matches[0]
                 self.__log.writeline('verbose', lambda: 'Found F* exectuable at `%s`.' % exe_path)
-                return exe_path
-        raise RuntimeError('Unable to find F* executable using filespec `%s`; please check your search path if you need all features of VimFStar to work properly.' % exe_filespec)
+                self.set_exe_path(exe_path)
+        raise RuntimeError('Unable to find F* executable using filespec `%s`; please check your search path if you need all features of VimFStar to work properly.' % filespec)
 
-    def __set_exe_path(self, path):
+    def set_exe_path(self, path):
         s = os.path.normpath(path)
         if not os.path.exists(s):
             raise RuntimeError("F* executable `%s` does not exist." % s)

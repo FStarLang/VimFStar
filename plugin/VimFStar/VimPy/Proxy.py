@@ -1,3 +1,4 @@
+import copy
 import os
 import sys
 
@@ -16,7 +17,12 @@ HAS_WINDOWS = sys.platform == "win32"
 class Proxy(object):
     """Proxy logic for Vim plugins"""
 
+    class DisabledError(RuntimeError):
+        def __init__(self, name, e):
+            RuntimeError.__init__(self, '%s has been disabled due to prior error condition: %s' % (name, e))
+
     def __init__(self, cons, **kwargs):
+        self.__name = kwargs.get('name')
         log_arg = kwargs.get('log', None)
         if log_arg is None:
             self.__log = Log()
@@ -32,21 +38,22 @@ class Proxy(object):
 
     def __getattr__(self, name):
         global HAS_VIM
-        attr = getattr(self.__target, name)
         if HAS_VIM:
-            return self.__vimcall(attr)
+            raise AttributeError
         else:
+            attr = getattr(self.__target, name)
             return self.__stdcall(attr)
 
     def __raise_if_error(self):
         if self.__error != None:
-            raise RuntimeError('Unable to get attribute `%s` due to prior error state.' % name)
+            raise Proxy.DisabledError(self.__name, self.__error)
 
     def __set_error(self, e):
         if self.__error == None:
             self.__error = e
         if HAS_VIM:
-            self.__log.writeline('error', lambda: 'Uncaught Python exception in `%s`: %s' % (name, e))
+            # todo: vim crashes if you write to stderr, so this is put on 'info' for the moment.
+            self.__log.writeline('info', lambda: 'Uncaught Python exception: %s' % e)
 
     def __get_notify_func(self):
         global HAS_VIM
@@ -55,7 +62,7 @@ class Proxy(object):
                 self.__log.writeline('verbose', 'notification is unavailable; manually refresh to see updates.')
             return f
         server_name = vim.eval('v:servername')
-        gvim_path = vim.eval('v:programname')
+        gvim_path = vim.eval('v:progname')
         expr = "g:vimfstar_refresh()"
         command = "%s --servername %s --remote-expr %s" % (gvim_path, server_name, expr)
         global HAS_WINDOWS
@@ -68,28 +75,33 @@ class Proxy(object):
             #os.system(command)
         return f
 
-    def __vimcall(self, f):
-        def vimcall():
-            try:
-                self.__raise_if_error()
-                name = vim.eval('l:pycall')
-                self.__vimargs = vim.eval('a:')
-                args = self.__vimargs.get('000', [])
-                kwargs = copy.copy(self.__vimargs)
-                del kwargs['000']
-                del kwargs['0']
-                del kwargs['firstline']
-                del kwargs['lastline']
-                self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s)' % (name, args, kwargs))
-                result = f(*args, **kwargs)
-                self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s) returned %s' % (name, args, kwargs, result))
-                # todo: we don't yet have a good story for return values.
-                vim.command('let l:pyresult = %r' % str(result))
-            except Exception as e:
-                self.__set_error(e)
-            finally:
-                self.__vimargs = None
-        return vimcall
+    def vimcall(self):
+        try:
+            self.__raise_if_error()
+            name = vim.eval('l:pycall')
+            self.__vimargs = vim.eval('a:')
+            args = self.__vimargs.get('000', [])
+            kwargs = copy.copy(self.__vimargs)
+            del kwargs['000']
+            del kwargs['0']
+            del kwargs['firstline']
+            del kwargs['lastline']
+            self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s)' % (name, args, kwargs))
+            f = getattr(self.__target, name)
+            result = f(*args, **kwargs)
+            self.__log.writeline('trace', lambda: '%s(*args=%s, **kwargs=%s) returned %s' % (name, args, kwargs, result))
+            # todo: we don't yet have a good story for return values-- (1, str) on success?.
+            vim.command('let l:pyresult = %r' % str(result))
+        except Proxy.DisabledError as e:
+            vim.command('let l:pyresult = 0')
+        except Exception as e:
+            # set the error state so that the plugin is considered disabled.
+            self.__set_error(e)
+            # vim executes the remainder of the calling function, even if an exception has occurred.
+            vim.command('let l:pyresult = 0')
+            raise
+        finally:
+            self.__vimargs = None
 
     def __stdcall(self, f):
         def stdcall(*args, **kwargs):

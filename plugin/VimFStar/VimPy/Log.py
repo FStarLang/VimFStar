@@ -1,18 +1,26 @@
 import sys
 import threading
 
+try:
+    global HAS_VIM
+    import vim
+    HAS_VIM = True
+except ImportError:
+    HAS_VIM = False
+    import Stubs as vim
+
 class Log(object):
 
     def __init__(self, **kwargs):
 
         self.__lock = threading.Lock()
-        self.__shown_tags = set()
+        self.__active_tags = set()
         self.__out = kwargs.get('out', sys.stdout)
         self.__err = kwargs.get('err', sys.stderr)
         ignore_default = kwargs.get('ignore_default', False)
         self.__tags_for_vim = set(['vim']) if ignore_default else set(['error', 'warning', 'info', 'vim'])
-        self.__shown_tags = set() if ignore_default else set(['error', 'warning', 'info', 'vim'])
-        self.__shown_tags = self.__shown_tags | set(kwargs.get('shown_tags', []))
+        self.__active_tags = set() if ignore_default else set(['error', 'warning', 'info', 'vim'])
+        self.__active_tags = self.__active_tags | set(kwargs.get('active_tags', []))
 
     def __coerce_msg(self, msg):
         if hasattr(msg, '__call__'):
@@ -30,7 +38,7 @@ class Log(object):
 
         with self.__lock:        
             t = self.__coerce_tags(tags)
-            i = t & self.__shown_tags
+            i = t & self.__active_tags
             if len(i) > 0:
                 l = list(i)
                 l.sort()
@@ -47,6 +55,9 @@ class Log(object):
                     # `vim` captures stdout, so if the 'vim' tag is specified or if the tags involved include any tags from the `self.__tags_for_vim` group, then we display the message in vim. 
                     if self.__out != sys.stdout and ('vim' in l or len(i & self.__tags_for_vim) > 0):
                         print(s)
+                self.__out.flush()
+                if self.__err != self.__out:
+                    self.__err.flush()
 
             
     
