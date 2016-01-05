@@ -18,6 +18,8 @@ class VimPlugin(object):
         self.__stderr_thread = None
         self.__proc = None
         self.__queue = None
+        self.__kill_flag_lock = threading.Lock()
+        self.__kill_flag = False
 
     def find_exe_path(self, filespec):
         path = os.getenv('PATH', os.defpath).split(os.pathsep)
@@ -41,15 +43,31 @@ class VimPlugin(object):
     def exe_path(self):
         return self.__exe_path
 
+    def __poll_kill_flag(self):
+        with self.__kill_flag_lock:
+            return self.__kill_flag
+
+    def __set_kill_flag(self):
+        with self.__kill_flag_lock:
+            self.__kill_flag = True
+
     #no waiting read as in http://stackoverflow.com/a/4896288/2598986
     def __thread_proc(self, name, file, queue):
         try:
-            for line in iter(file.readline, b''):
-                self.__log.writeline('debug', lambda: 'f* -> %r' % line)
-                queue.put((name, line))
-                self.__notify_func()
+            kill_flag = self.__poll_kill_flag()
+            if not kill_flag:
+                for line in iter(file.readline, b''):
+                    self.__log.writeline('debug', lambda: 'f* -> %r' % line)
+                    queue.put((name, line))
+                    self.__notify_func()
+                    kill_flag = self.__poll_kill_flag()
+                    if kill_flag:
+                        break
             out.close()
-            self.__log.writeline('verbose', lambda: '%s thread has detected that f* has terminated' % name)
+            if kill_flag:
+                self.__log.writeline('verbose', lambda: '%s thread has been asked to terminate' % name)
+            else:
+                self.__log.writeline('verbose', lambda: '%s thread has detected that f* has terminated' % name)
         except Exception as e:
             queue.put(('raise', e))
 
@@ -85,6 +103,13 @@ class VimPlugin(object):
             return 0
         self.__handle_event(event)
         return 1
+
+    def on_VimLeave(self):
+        if self.__proc != None:
+            self.__proc.poll()
+            if self.__proc.returncode == None:
+                self.__log.writeline('verbose', 'f* has not exited yet; killing')
+                self.__proc.kill()
 
     def __handle_event(self, event):
         self.__log.writeline('debug', lambda: 'primary thread got event (%r, %r)' % event)
