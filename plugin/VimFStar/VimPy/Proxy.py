@@ -99,6 +99,7 @@ class Proxy(object):
             self.__set_error(e)
             # vim executes the remainder of the calling function, even if an exception has occurred.
             vim.command('let l:pyresult = 0')
+            self.__log.flush()
             raise
         finally:
             self.__vimargs = None

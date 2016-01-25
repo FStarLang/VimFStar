@@ -59,5 +59,9 @@ class Log(object):
                 if self.__err != self.__out:
                     self.__err.flush()
 
+    def flush(self):
+        self.__out.flush()
+        self.__err.flush()
+
             
     
