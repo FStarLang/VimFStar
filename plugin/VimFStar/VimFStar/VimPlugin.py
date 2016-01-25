@@ -25,23 +25,13 @@ class VimPlugin(object):
         self.__stop_flag_lock = threading.Lock()
         self.__stop_flag = False
 
-    def find_exe_path(self, filespec):
-        path = os.getenv('PATH', os.defpath).split(os.pathsep)
-        self.__log.writeline('debug', lambda: 'Searching for F* executable; search path is: %r' % path)
-        for dir in path:
-            matches = glob.glob(os.path.normpath(os.path.join(dir, filespec)))
-            if len(matches) > 0:
-                exe_path = matches[0]
-                self.__log.writeline('verbose', lambda: 'Found F* exectuable at `%s`.' % exe_path)
-                self.set_exe_path(exe_path)
-        raise RuntimeError('Unable to find F* executable using filespec `%s`; please check your search path if you need all features of VimFStar to work properly.' % filespec)
-
     def set_exe_path(self, path):
-        s = os.path.normpath(path)
+        s = os.path.normpath(os.path.expanduser(path))
         if not os.path.exists(s):
             raise RuntimeError("F* executable `%s` does not exist." % s)
         if not os.path.isfile(s) or not os.access(s, os.X_OK):
             raise RuntimeError("`%s` is not an executable file." % s)
+        self.__log.writeline('info', lambda: 'Using F* executable located at `%s`.' % s)
         self.__exe_path = s
 
     def exe_path(self):
