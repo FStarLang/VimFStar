@@ -1,3 +1,3 @@
--   Plugin should start F\* minimized.
+-   Refactor shutdown logic
 
--   Vim is unable to shut down if F\* is open.
+-   Support graceful shutdown of F\*

@@ -7,6 +7,8 @@ import Queue
 import threading
 
 ON_POSIX = 'posix' in sys.builtin_module_names
+# snippet from http://code.activestate.com/recipes/578300-python-subprocess-hide-console-on-windows/
+IS_WIN32 = 'win32' in str(sys.platform).lower()
 
 class VimPlugin(object):
     """VimFStar plugin logic"""
@@ -18,8 +20,8 @@ class VimPlugin(object):
         self.__stderr_thread = None
         self.__proc = None
         self.__queue = None
-        self.__kill_flag_lock = threading.Lock()
-        self.__kill_flag = False
+        self.__stop_flag_lock = threading.Lock()
+        self.__stop_flag = False
 
     def find_exe_path(self, filespec):
         path = os.getenv('PATH', os.defpath).split(os.pathsep)
@@ -43,42 +45,68 @@ class VimPlugin(object):
     def exe_path(self):
         return self.__exe_path
 
-    def __poll_kill_flag(self):
-        with self.__kill_flag_lock:
-            return self.__kill_flag
+    def __poll_stop_flag(self):
+        with self.__stop_flag_lock:
+            return self.__stop_flag
 
-    def __set_kill_flag(self):
-        with self.__kill_flag_lock:
-            self.__kill_flag = True
+    def __set_stop_flag(self):
+        with self.__stop_flag_lock:
+            self.__stop_flag = True
 
     #no waiting read as in http://stackoverflow.com/a/4896288/2598986
     def __thread_proc(self, name, file, queue):
         try:
-            kill_flag = self.__poll_kill_flag()
-            if not kill_flag:
+            stop_flag = self.__poll_stop_flag()
+            if not stop_flag:
                 for line in iter(file.readline, b''):
-                    self.__log.writeline('debug', lambda: 'f* -> %r' % line)
+                    self.__log.writeline('debug', lambda: 'got %r' % line)
                     queue.put((name, line))
                     self.__notify_func()
-                    kill_flag = self.__poll_kill_flag()
-                    if kill_flag:
+                    stop_flag = self.__poll_stop_flag()
+                    if stop_flag:
                         break
             out.close()
-            if kill_flag:
+            if stop_flag:
                 self.__log.writeline('verbose', lambda: '%s thread has been asked to terminate' % name)
             else:
-                self.__log.writeline('verbose', lambda: '%s thread has detected that f* has terminated' % name)
+                self.__log.writeline('verbose', lambda: '%s thread has reached end of input' % name)
         except Exception as e:
             queue.put(('raise', e))
 
+    def stop(self, force=False):
+        if isinstance(force, basestring):
+            force = force != '0'
+        if self.__proc == None:
+            return
+        self.__proc.poll()
+        if self.__proc.returncode != None:
+            return
+        self.__log.writeline('verbose', lambda: 'Stopping F* (force=%r)' % force)
+        if force:
+            self.__proc.kill()
+            self.__stdout_thread = None
+            self.__stderr_thread = None
+            self.__proc = None
+            self.__queue = None
+        else:
+            with self.__stop_flag_lock:
+                self.__stop_flag = True
+
     def start(self) :
+        # hide console window from user. snippet obtained from http://code.activestate.com/recipes/578300-python-subprocess-hide-console-on-windows/
+        startupinfo = None
+        if IS_WIN32:
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags = subprocess.CREATE_NEW_CONSOLE | subprocess.STARTF_USESHOWWINDOW
+            startupinfo.wShowWindow = subprocess.SW_HIDE
         p = subprocess.Popen(
             [self.__exe_path, '--in'], 
             stdin=subprocess.PIPE, 
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             bufsize=1, 
-            close_fds=ON_POSIX)
+            close_fds=ON_POSIX,
+            startupinfo=startupinfo)
         q = Queue.Queue()
         t = threading.Thread(target=self.__thread_proc, args=('stdout', p.stdout, q))
         t.daemon = True
@@ -103,13 +131,6 @@ class VimPlugin(object):
             return 0
         self.__handle_event(event)
         return 1
-
-    def on_VimLeave(self):
-        if self.__proc != None:
-            self.__proc.poll()
-            if self.__proc.returncode == None:
-                self.__log.writeline('verbose', 'f* has not exited yet; killing')
-                self.__proc.kill()
 
     def __handle_event(self, event):
         self.__log.writeline('debug', lambda: 'primary thread got event (%r, %r)' % event)

@@ -27,13 +27,13 @@ fu! s:import_python_function(fn_name, arg_names)
 endfunction
 
 call s:import_python_function('start', [])
+call s:import_python_function('stop', ['force'])
 call s:import_python_function('refresh', [])
 call s:import_python_function('find_exe_path', ['filespec'])
 call s:import_python_function('set_exe_path', ['path'])
 call s:import_python_function('get_exe_path', [])
-call s:import_python_function('on_VimLeave', [])
 
-au VimLeave * call s:on_VimLeave()
+au VimLeave * call s:stop(1)
 
 call s:set_exe_path('C:\Users\mirobert\Documents\wip\Echo\Echo\bin\Debug\Echo.exe')
 call s:start()
