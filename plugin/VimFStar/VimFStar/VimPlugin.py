@@ -6,6 +6,8 @@ import sys
 import Queue
 import threading
 
+import Util
+
 ON_POSIX = 'posix' in sys.builtin_module_names
 # snippet from http://code.activestate.com/recipes/578300-python-subprocess-hide-console-on-windows/
 IS_WIN32 = 'win32' in str(sys.platform).lower()
@@ -74,8 +76,7 @@ class VimPlugin(object):
             queue.put(('raise', e))
 
     def stop(self, force=False):
-        if isinstance(force, basestring):
-            force = force != '0'
+        force = Util.coerce_to_bool(force)
         if self.__proc == None:
             return
         self.__proc.poll()

@@ -16,16 +16,20 @@ if __name__ == '__main__':
         log.writeline(['debug'], lambda: "I was invoked from within a Vim environment.")
     else:
         log.writeline(['debug'], lambda: "I was invoked from the command line.")
-        plugin.initialize(exe_path=b'C:\\Users\\mirobert\\Documents\\wip\\Echo\\Echo\\bin\\Debug\\Echo.exe')
+        plugin.set_exe_path(b'C:\\Users\\mirobert\\Documents\\wip\\Echo\\Echo\\bin\\Debug\\Echo.exe')
         print plugin.exe_path()
         plugin.start()
-        i = 0
-        while i < 100:
-            plugin.refresh()
-            plugin.writeline('o hai #%s' % str(i))
-            time.sleep(1)
-            plugin.refresh()
-            i = i + 1
+        try:
+            i = 0
+            while i < 100:
+                plugin.refresh()
+                plugin.writeline('o hai #%s' % str(i))
+                time.sleep(1)
+                plugin.refresh()
+                i = i + 1
+        except:
+            plugin.stop(1)
+            raise
 
 
 # legacy code starts here

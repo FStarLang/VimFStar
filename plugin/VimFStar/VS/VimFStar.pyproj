@@ -23,6 +23,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="start.py" />
+    <Compile Include="VimFStar\Util.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="VimFStar\VimPlugin.py" />
     <Compile Include="VimFStar\__init__.py" />
     <Compile Include="VimPy\Log.py" />
