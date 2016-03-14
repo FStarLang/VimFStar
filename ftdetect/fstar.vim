@@ -8,3 +8,4 @@
 " visit <http://vimdoc.sourceforge.net/htmldoc/uganda.html> for details.
 
 autocmd BufNewFile,BufRead *.fst set filetype=fstar
+autocmd BufNewFile,BufRead *.fsti set filetype=fstar
