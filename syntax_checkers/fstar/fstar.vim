@@ -19,15 +19,7 @@ endif
 let s:save_cpo = &cpo
 set cpo&vim
 
-let s:fstar_exe_path = "fstar.exe"
-if exists("g:vimfstar_fstar_exe_path")
-    let s = expand(g:vimfstar_fstar_exe_path)
-    if executable(s)
-        let s:fstar_exe_path = s
-    else
-        echoerr "The path specified by g:vimfstar_fstar_exe_path does not point to an executable file. Please verify that this is configured correctly."
-    endif
-endif
+let s:fstar_exe_path = Ffind_fstar ()
 
 function! SyntaxCheckers_fstar_fstar_IsAvailable() dict
 "    Decho "self.getExec() => " . self.getExec()

@@ -4,40 +4,46 @@ endif
 let b:did_ftplugin=1
 
 fu! Ffind_fstar ()
-   " convert the system path to a comma-separated list of directories
-   " suitable for globpath() consumption.
-   " 
-   " first, commas must be escaped with a backslash.
-   " todo: test a path with a comma in it to make sure this works.
-   let l:jpath = substitute($PATH,",","\\,","g")
-   " different platforms use different path separators.
-   if has('win32')
-      " additionally, Windows paths need to have trailing backslashes removed.
-      let l:jpath = substitute(l:jpath,"\\;",";","g")
-      let l:jpath = substitute(l:jpath,";",",","g")
+   if exists("g:vimfstar_fstar_exe_path")
+       let s = expand(g:vimfstar_fstar_exe_path)
+       if executable(s)
+           return s
+       else
+           echoerr "The path specified by g:vimfstar_fstar_exe_path does not point to an executable file. Please verify that this is configured correctly."
+       endif
    else
-      let l:jpath = substitute(l:jpath,":",",","g")
-   endif
-   " todo: ask regarding why newlines would be in $PATH?
-   let l:jpath = substitute(l:jpath,"\n","","g")
-"   Decho("[Ffind_fstar] l:jpath=" . l:jpath)
+      " convert the system path to a comma-separated list of directories
+      " suitable for globpath() consumption.
+      " 
+      " first, commas must be escaped with a backslash.
+      " todo: test a path with a comma in it to make sure this works.
+      let l:jpath = substitute($PATH,",","\\,","g")
+      " different platforms use different path separators.
+      if has('win32')
+         " additionally, Windows paths need to have trailing backslashes removed.
+         let l:jpath = substitute(l:jpath,"\\;",";","g")
+         let l:jpath = substitute(l:jpath,";",",","g")
+      else
+         let l:jpath = substitute(l:jpath,":",",","g")
+      endif
+      " todo: ask regarding why newlines would be in $PATH?
+      let l:jpath = substitute(l:jpath,"\n","","g")
+   "   Decho("[Ffind_fstar] l:jpath=" . l:jpath)
 
-   let l:matchs = globpath(l:jpath,"fstar.exe")
-"   Decho("[Ffind_fstar] l:matchs=" . l:matchs)
-   return l:matchs
+      let l:matchs = globpath(l:jpath,"fstar.exe")
+   "   Decho("[Ffind_fstar] l:matchs=" . l:matchs)
+      return l:matchs
+   endif
 endfunction
 
 let s:matchs = Ffind_fstar ()
 
-"Disable interactive feature
-"let g:fstar_inter = 1
-
 "Disable mappings
 "let g:fstar_inter_maps = 1
 
-if !empty(s:matchs) && !exists('g:fstar_inter')
+if g:vimfstar_interactive && !empty(s:matchs) && !exists('s:fstar_inter')
 
-  let g:fstar_inter = 1
+  let s:fstar_inter = 1
   pyfile <sfile>:p:h/fstar-inter.py
 
   fu! Ftest_code ()

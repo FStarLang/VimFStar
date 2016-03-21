@@ -9,7 +9,7 @@ with a type system for program verification.
 Features
 --------
 
-- `.fst` file detection.
+-   `.fst` file detection.
 
 -   Syntax highlighting (based on [Vim's OCaml syntax
     file](<https://github.com/vim/vim/blob/master/runtime/syntax/ocaml.vim>)).
@@ -31,19 +31,34 @@ perform the following steps to install *VimFStar*:
 1.  Edit your `.vimrc` and add a `Plug` declaration for *VimFStar*.
 
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ vim
-	call plug#begin()
-	" ...
-	Plug 'FStarLang/VimFStar', {'for': 'fstar'}
-	" ...
-	call plug#end()
+    call plug#begin()
+    " ...
+    Plug 'FStarLang/VimFStar', {'for': 'fstar'}
+    " ...
+    call plug#end()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2. Restart Vim
+2.  Restart Vim
 
-3. `:PlugInstall` to install the plugin.
+3.  `:PlugInstall` to install the plugin.
 
-Use of the interactive verification
------------------------------------
+Interactive verification
+------------------------
+
+### Setup
+
+The interactive mode is not yet supported on some configurations-- e.g. on Windows,
+only Cygwin builds of (g)Vim are currently supported. The interactive mode is
+disabled by default for this reason.
+
+You can enable the interactive mode by adding the following line to your
+`.vimrc`:
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ vim
+let g:vimfstar_interactive = 1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Usage
 
 First, put `fstar.exe` in your \$PATH. VimFStar will check that `fstar.exe` is
 present before loading interactive functions.
@@ -137,10 +152,10 @@ details.
 Planned Improvements
 --------------------
 
-- more accurate syntax highlighting.
+-   more accurate syntax highlighting.
 
-- better highlighting of verified code
+-   better highlighting of verified code
 
-- quick access to error locations
+-   quick access to error locations
 
-- ability to pop environment
+-   ability to pop environment
