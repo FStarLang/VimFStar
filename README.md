@@ -58,10 +58,18 @@ You can enable the interactive mode by adding the following line to your
 let g:vimfstar_interactive = 1
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-### Usage
+#### Specifying the Location of F\*
 
-First, put `fstar.exe` in your \$PATH. VimFStar will check that `fstar.exe` is
-present before loading interactive functions.
+*VimFStar* will attempt to determine the location of `fstar.exe` by searching
+paths specified in the `PATH` environment variable. If you prefer to explicitly
+specify the location of this file, you may do so by adding the following line to
+your `vimrc` (adapted, of course, to suit your own configuration):
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ vim
+let g:vimfstar_fstar_exe_path = "~/Documents/FStar/bin/fstar.exe"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+### Usage
 
 To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode. The marker ```v``` is set to the line just after the end of the checked part, so you can go there with ```'v```. If you already know that your code is correct until the cursor and just want to add it to the context, you can press ```<F6>``` for a quick test (useful for projects with thousands of lines and where normal tests last very long).
 
@@ -103,16 +111,6 @@ Syntastic Integration
 support for verifying whole source files and marking any errors from within Vim.
 
 ![](<./plugin/VimFStar/doc/syntastic.jpg>)
-
-### Specifying the Location of F\*
-
-Currently, the *Syntastic* support requires that you specify the location of the
-F\* executable that you wish to use. You can do this by adding the following
-line to your `vimrc` (adapted, of course, to suit your own configuration):
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ vim
-let g:vimfstar_fstar_exe_path="~/Documents/FStar/bin/fstar.exe"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ### Passive Syntastic Checks
 
