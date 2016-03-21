@@ -57,29 +57,9 @@ def fstar_writeinter (s) :
     global fst
     fst.stdin.write(s)
 
-def fstar_get_config_from_buf() :
-    startl = int(vim.eval('search(\'(\\*--build-config\')')) + 1
-    endl = int(vim.eval('search(\'--\*)\')')) - 1
-    if startl == 0 :
-        return []
-    configlines = vim.eval("getline(%d,%d)"%(startl,endl))
-    configlines = ''.join(configlines)
-    configlines = configlines.split(';')
-    response=[]
-    for line in configlines :
-        line = line.strip(' \t\n\r')
-        temp = line.split(':')
-        if(temp[0] == 'options'):
-            response = response + (temp[1].split(' '))
-        if(temp[0] == 'other-files'):
-            response = response + (temp[1].split(' '))
-            
-    return response
-
-
 def fstar_init () :
     global fst,interout
-    fst=Popen([fstarpath,'--in']+fstar_get_config_from_buf(),stdin=PIPE, stdout=PIPE,bufsize=1,close_fds=ON_POSIX)
+    fst=Popen([fstarpath,'--in'],stdin=PIPE, stdout=PIPE,bufsize=1,close_fds=ON_POSIX)
     interout=Queue()
     t=Thread(target=fstar_enqueue_output,args=(fst.stdout,interout))
     t.daemon=True
@@ -94,16 +74,21 @@ def fstar_reset() :
     fstarupdatehi=False
     fstar_reset_hi()
     fstar_init()
-    print 'Interaction reseted'
+    print 'Interaction reset'
 
 
-def fstar_test_code (code,keep) :
+def fstar_test_code (code,keep,quickcheck=False) :
     global fstarbusy,fst
     if fstarbusy == 1 :
         return 'Already busy'
     fstarbusy = 1
     fstar_writeinter('#push\n')
+    if quickcheck :
+        fstar_writeinter('#set-options "--admit_smt_queries true"\n')
     fstar_writeinter(code) 
+    fstar_writeinter('\n')
+    if quickcheck : 
+        fstar_writeinter('#reset-options\n')
     fstar_writeinter('#end\n')
     if not keep :
         fstar_writeinter('#pop\n')
@@ -171,7 +156,7 @@ def fstar_vim_test_code () :
     fstar_test_code(code,False)
     print 'Test of selected code launched'
 
-def fstar_vim_until_cursor () :
+def fstar_vim_until_cursor (quick=False) :
     global fstarcurrentline,fstarpotentialline,fstarrequestline,fstarupdatehi, fstaranswer
     if fstarbusy == 1 :
         print 'Already busy'
@@ -187,8 +172,11 @@ def fstar_vim_until_cursor () :
     code = fstar_get_range(firstl,endl)
     fstarpotentialline=endl
     fstarupdatehi=True
-    fstar_test_code(code,True)
-    print 'Test until this point launched'
+    fstar_test_code(code,True,quick)
+    if quick :
+        print 'Quick test until this point launched'
+    else :
+        print 'Test until this point launched'
 
 def fstar_vim_get_answer() :
     global fstaranswer

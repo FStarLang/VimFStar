@@ -9,7 +9,7 @@ with a type system for program verification.
 Features
 --------
 
--   `.fst` file detection.
+- `.fst` file detection.
 
 -   Syntax highlighting (based on [Vim's OCaml syntax
     file](<https://github.com/vim/vim/blob/master/runtime/syntax/ocaml.vim>)).
@@ -31,16 +31,16 @@ perform the following steps to install *VimFStar*:
 1.  Edit your `.vimrc` and add a `Plug` declaration for *VimFStar*.
 
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ vim
-    call plug#begin()
-    " ...
-    Plug 'FStarLang/VimFStar' {'for': 'fstar'}
-    " ...
-    call plug#end()
+	call plug#begin()
+	" ...
+	Plug 'FStarLang/VimFStar', {'for': 'fstar'}
+	" ...
+	call plug#end()
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-2.  Restart Vim
+2. Restart Vim
 
-3.  `:PlugInstall` to install the plugin.
+3. `:PlugInstall` to install the plugin.
 
 Use of the interactive verification
 -----------------------------------
@@ -48,9 +48,7 @@ Use of the interactive verification
 First, put `fstar.exe` in your \$PATH. VimFStar will check that `fstar.exe` is
 present before loading interactive functions.
 
-To test your code and it to the environment up to the current position of the
-cursor, press `<F2>` in normal mode. The marker `v` is set to the line just
-after the end of the checked part, so you can go there with `'v`
+To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode. The marker ```v``` is set to the line just after the end of the checked part, so you can go there with ```'v```. If you already know that your code is correct until the cursor and just want to add it to the context, you can press ```<F6>``` for a quick test (useful for projects with thousands of lines and where normal tests last very long).
 
 If you want to test some part of your code without adding it to the environment,
 select it in visual line mode (Shift+V) and press `<F2>`
@@ -139,10 +137,10 @@ details.
 Planned Improvements
 --------------------
 
--   more accurate syntax highlighting.
+- more accurate syntax highlighting.
 
--   better highlighting of verified code
+- better highlighting of verified code
 
--   quick access to error locations
+- quick access to error locations
 
--   ability to pop environment
+- ability to pop environment
