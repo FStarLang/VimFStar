@@ -3,17 +3,37 @@ if exists("b:did_ftplugin")
 endif
 let b:did_ftplugin=1
 
-let s:path = system("echo $PATH")
-let s:jpath = substitute(s:path,":",",","g")
-let s:jpath = substitute(s:jpath,"\n","","g")
-let s:matchs = globpath(s:jpath,"fstar.exe")
+fu! Ffind_fstar ()
+   " convert the system path to a comma-separated list of directories
+   " suitable for globpath() consumption.
+   " 
+   " first, commas must be escaped with a backslash.
+   " todo: test a path with a comma in it to make sure this works.
+   let l:jpath = substitute($PATH,",","\\,","g")
+   " different platforms use different path separators.
+   if has('win32')
+      " additionally, Windows paths need to have trailing backslashes removed.
+      let l:jpath = substitute(l:jpath,"\\;",";","g")
+      let l:jpath = substitute(l:jpath,";",",","g")
+   else
+      let l:jpath = substitute(l:jpath,":",",","g")
+   endif
+   " todo: ask regarding why newlines would be in $PATH?
+   let l:jpath = substitute(l:jpath,"\n","","g")
+"   Decho("[Ffind_fstar] l:jpath=" . l:jpath)
+
+   let l:matchs = globpath(l:jpath,"fstar.exe")
+"   Decho("[Ffind_fstar] l:matchs=" . l:matchs)
+   return l:matchs
+endfunction
+
+let s:matchs = Ffind_fstar ()
 
 "Disable interactive feature
 "let g:fstar_inter = 1
 
 "Disable mappings
 "let g:fstar_inter_maps = 1
-
 
 if !empty(s:matchs) && !exists('g:fstar_inter')
 
