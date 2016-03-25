@@ -29,6 +29,8 @@ If you're using [vim-plug], for example, perform the following steps to install 
 
 ## Use of the interactive verification
 
+*Note: Interactive mode requires a Cygwin build of (g)Vim.*
+
 First, put ```fstar.exe``` in your $PATH. VimFStar will check that ```fstar.exe``` is present before loading interactive functions.
 
 To test your code and it to the environment up to the current position of the cursor, press ```<F2>``` in normal mode. The marker ```v``` is set to the line just after the end of the checked part, so you can go there with ```'v```. If you already know that your code is correct until the cursor and just want to add it to the context, you can press ```<F6>``` for a quick test (useful for projects with thousands of lines and where normal tests last very long).
