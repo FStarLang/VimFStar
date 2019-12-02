@@ -114,8 +114,8 @@ syn region   fstarNone matchgroup=fstarKeyword start="\<open\>" matchgroup=fstar
 syn match    fstarKeyword "\<include\>" skipwhite skipempty nextgroup=fstarModParam,fstarFullMod
 
 " "module" - somewhat complicated stuff ;-)
-syn region   fstarModule matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\>" contains=@fstarAllErrs,fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarPreDef
-syn region   fstarPreDef start="."me=e-1 matchgroup=fstarKeyword end="\l\|=\|)"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarModParam,fstarModTypeRestr,fstarModTRWith nextgroup=fstarModPreRHS
+syn region   fstarModule matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|\.\)*\>" contains=@fstarAllErrs,fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarPreDef
+syn region   fstarPreDef start="[:print:]"me=e-1 matchgroup=fstarKeyword end="\l\|=\|)"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarModParam,fstarModTypeRestr,fstarModTRWith nextgroup=fstarModPreRHS
 syn region   fstarModParam start="([^*]" end=")" contained contains=@fstarAENoParen,fstarModParam1,fstarVal
 syn match    fstarModParam1 "\<\u\(\w\|'\)*\>" contained skipwhite skipempty nextgroup=fstarPreMPRestr
 
