@@ -74,7 +74,7 @@ syn region   fstarEncl transparent matchgroup=fstarKeyword start="\[|" matchgrou
 
 " Comments
 syn region   fstarComment start="(\*" end="\*)" contains=@Spell,fstarComment,fstarTodo
-syn match    fstarComment "//.*$" contains=fstarComment,fstarTodo,@Spell
+syn match    fstarCommentLine "//.*$" contains=fstarComment,fstarCommentLine,fstarTodo,@Spell
 syn keyword  fstarTodo contained TODO FIXME XXX NOTE
 
 
@@ -105,33 +105,33 @@ syn region   fstarNone matchgroup=fstarKeyword start="\<if\>" matchgroup=fstarKe
 
 " "sig"
 syn region   fstarSig matchgroup=fstarModule start="\<sig\>" matchgroup=fstarModule end="\<end\>" contains=ALLBUT,@fstarContained,fstarEndErr,fstarModule
-syn region   fstarModSpec matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\>" contained contains=@fstarAllErrs,fstarComment skipwhite skipempty nextgroup=fstarModTRWith,fstarMPRestr
+syn region   fstarModSpec matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\>" contained contains=@fstarAllErrs,fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarModTRWith,fstarMPRestr
 
 " "open"
-syn region   fstarNone matchgroup=fstarKeyword start="\<open\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\( *\. *\u\(\w\|'\)*\)*\>" contains=@fstarAllErrs,fstarComment
+syn region   fstarNone matchgroup=fstarKeyword start="\<open\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\( *\. *\u\(\w\|'\)*\)*\>" contains=@fstarAllErrs,fstarComment,fstarCommentLine
 
 " "include"
 syn match    fstarKeyword "\<include\>" skipwhite skipempty nextgroup=fstarModParam,fstarFullMod
 
 " "module" - somewhat complicated stuff ;-)
-syn region   fstarModule matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\>" contains=@fstarAllErrs,fstarComment skipwhite skipempty nextgroup=fstarPreDef
-syn region   fstarPreDef start="."me=e-1 matchgroup=fstarKeyword end="\l\|=\|)"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarModParam,fstarModTypeRestr,fstarModTRWith nextgroup=fstarModPreRHS
+syn region   fstarModule matchgroup=fstarKeyword start="\<module\>" matchgroup=fstarModule end="\<\u\(\w\|'\)*\>" contains=@fstarAllErrs,fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarPreDef
+syn region   fstarPreDef start="."me=e-1 matchgroup=fstarKeyword end="\l\|=\|)"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarModParam,fstarModTypeRestr,fstarModTRWith nextgroup=fstarModPreRHS
 syn region   fstarModParam start="([^*]" end=")" contained contains=@fstarAENoParen,fstarModParam1,fstarVal
 syn match    fstarModParam1 "\<\u\(\w\|'\)*\>" contained skipwhite skipempty nextgroup=fstarPreMPRestr
 
-syn region   fstarPreMPRestr start="."me=e-1 end=")"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarMPRestr,fstarModTypeRestr
+syn region   fstarPreMPRestr start="."me=e-1 end=")"me=e-1 contained contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarMPRestr,fstarModTypeRestr
 
-syn region   fstarMPRestr start=":" end="."me=e-1 contained contains=@fstarComment skipwhite skipempty nextgroup=fstarMPRestr1,fstarMPRestr2,fstarMPRestr3
+syn region   fstarMPRestr start=":" end="."me=e-1 contained contains=@fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarMPRestr1,fstarMPRestr2,fstarMPRestr3
 syn region   fstarMPRestr1 matchgroup=fstarModule start="\ssig\s\=" matchgroup=fstarModule end="\<end\>" contained contains=ALLBUT,@fstarContained,fstarEndErr,fstarModule
-syn region   fstarMPRestr2 start="\sfunctor\(\s\|(\)\="me=e-1 matchgroup=fstarKeyword end="->" contained contains=@fstarAllErrs,fstarComment,fstarModParam skipwhite skipempty nextgroup=fstarFuncWith,fstarMPRestr2
+syn region   fstarMPRestr2 start="\sfunctor\(\s\|(\)\="me=e-1 matchgroup=fstarKeyword end="->" contained contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarModParam skipwhite skipempty nextgroup=fstarFuncWith,fstarMPRestr2
 syn match    fstarMPRestr3 "\w\(\w\|'\)*\( *\. *\w\(\w\|'\)*\)*" contained
 syn match    fstarModPreRHS "=" contained skipwhite skipempty nextgroup=fstarModParam,fstarFullMod
 syn keyword  fstarKeyword val
-syn region   fstarVal matchgroup=fstarKeyword start="\<val\>" matchgroup=fstarLCIdentifier end="\<\l\(\w\|'\)*\>" contains=@fstarAllErrs,fstarComment,fstarFullMod skipwhite skipempty nextgroup=fstarMPRestr
-syn region   fstarModRHS start="." end=". *\w\|([^*]"me=e-2 contained contains=fstarComment skipwhite skipempty nextgroup=fstarModParam,fstarFullMod
+syn region   fstarVal matchgroup=fstarKeyword start="\<val\>" matchgroup=fstarLCIdentifier end="\<\l\(\w\|'\)*\>" contains=@fstarAllErrs,fstarComment,fstarCommentLine,fstarFullMod skipwhite skipempty nextgroup=fstarMPRestr
+syn region   fstarModRHS start="." end=". *\w\|([^*]"me=e-2 contained contains=fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarModParam,fstarFullMod
 syn match    fstarFullMod "\<\u\(\w\|'\)*\( *\. *\u\(\w\|'\)*\)*" contained skipwhite skipempty nextgroup=fstarFuncWith
 
-syn region   fstarFuncWith start="([^*]"me=e-1 end=")" contained contains=fstarComment,fstarWith,fstarFuncStruct skipwhite skipempty nextgroup=fstarFuncWith
+syn region   fstarFuncWith start="([^*]"me=e-1 end=")" contained contains=fstarComment,fstarCommentLine,fstarWith,fstarFuncStruct skipwhite skipempty nextgroup=fstarFuncWith
 syn region   fstarFuncStruct matchgroup=fstarModule start="[^a-zA-Z]struct\>"hs=s+1 matchgroup=fstarModule end="\<end\>" contains=ALLBUT,@fstarContained,fstarEndErr
 
 syn match    fstarModTypeRestr "\<\w\(\w\|'\)*\( *\. *\w\(\w\|'\)*\)*\>" contained
@@ -143,7 +143,7 @@ syn region   fstarWithRest start="[^)]" end=")"me=e-1 contained contains=ALLBUT,
 syn region   fstarStruct matchgroup=fstarModule start="\<\(module\s\+\)\=struct\>" matchgroup=fstarModule end="\<end\>" contains=ALLBUT,@fstarContained,fstarEndErr
 
 " "module type"
-syn region   fstarKeyword start="\<module\>\s*\<type\>\(\s*\<of\>\)\=" matchgroup=fstarModule end="\<\w\(\w\|'\)*\>" contains=fstarComment skipwhite skipempty nextgroup=fstarMTDef
+syn region   fstarKeyword start="\<module\>\s*\<type\>\(\s*\<of\>\)\=" matchgroup=fstarModule end="\<\w\(\w\|'\)*\>" contains=fstarComment,fstarCommentLine skipwhite skipempty nextgroup=fstarMTDef
 syn match    fstarMTDef "=\s*\w\(\w\|'\)*\>"hs=s+1,me=s+1 skipwhite skipempty nextgroup=fstarFullMod
 
 syn keyword  fstarKeyword  and as assume assert
@@ -276,6 +276,7 @@ if version >= 508 || !exists("did_fstar_syntax_inits")
   HiLink fstarErr	   Error
 
   HiLink fstarComment	   Comment
+  HiLink fstarCommentLine	   Comment
 
   HiLink fstarModPath	   Include
   HiLink fstarObject	   Include
